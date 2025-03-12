@@ -128,6 +128,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/pedidos/{order:sequential_id}', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/pedidos/{order}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/pedidos/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::get('/pedidos/{order:sequential_id}/recebiveis/criar', [OrderController::class, 'createReceivables'])->name('orders.create-receivables');
+    Route::post('/pedidos/{order}/recebiveis', [OrderController::class, 'storeReceivables'])->name('orders.store-receivables');
 
     // Contas
     Route::get('/contas', [AccountController::class, 'index'])->name('accounts.index');

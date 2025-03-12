@@ -49,4 +49,19 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function receivables(): HasMany
+    {
+        return $this->hasMany(Receivable::class);
+    }
+
+    public function hasReceivables(): bool
+    {
+        return $this->receivables()->exists();
+    }
+
+    public function isEditable(): bool
+    {
+        return ! $this->hasReceivables();
+    }
 }

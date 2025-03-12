@@ -251,7 +251,7 @@ onMounted(() => {
 
         <div class="content-wrapper">
             <section class="content">
-                <div class="container-fluid pt-3">
+                <div class="container-fluid py-3">
                     <slot />
                 </div>
             </section>

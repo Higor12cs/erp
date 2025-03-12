@@ -58,8 +58,9 @@ const deleteOrder = (orderId) => {
                         <thead>
                             <tr>
                                 <th class="col-1">Código</th>
-                                <th class="col-6">Cliente</th>
+                                <th class="col-5">Cliente</th>
                                 <th class="col-2">Data</th>
+                                <th class="col-1">Status</th>
                                 <th class="col-2">Valor</th>
                                 <th class="col-1">Ações</th>
                             </tr>
@@ -76,6 +77,24 @@ const deleteOrder = (orderId) => {
                                 </td>
                                 <td>{{ order.customer.first_name }}</td>
                                 <td>{{ formatDate(order.issue_date) }}</td>
+                                <td>
+                                    <span
+                                        class="badge"
+                                        :class="
+                                            order.receivables &&
+                                            order.receivables.length
+                                                ? 'bg-success'
+                                                : 'bg-warning'
+                                        "
+                                    >
+                                        {{
+                                            order.receivables &&
+                                            order.receivables.length
+                                                ? "Finalizado"
+                                                : "Pendente"
+                                        }}
+                                    </span>
+                                </td>
                                 <td>{{ formatCurrency(order.total_price) }}</td>
                                 <td class="text-nowrap">
                                     <Link
@@ -90,6 +109,12 @@ const deleteOrder = (orderId) => {
                                         Visualizar
                                     </Link>
                                     <Link
+                                        v-if="
+                                            !(
+                                                order.receivables &&
+                                                order.receivables.length
+                                            )
+                                        "
                                         :href="
                                             route(
                                                 'orders.edit',
@@ -100,6 +125,23 @@ const deleteOrder = (orderId) => {
                                     >
                                         Editar
                                     </Link>
+                                    <Link
+                                        v-if="
+                                            !(
+                                                order.receivables &&
+                                                order.receivables.length
+                                            )
+                                        "
+                                        :href="
+                                            route(
+                                                'orders.create-receivables',
+                                                order.sequential_id
+                                            )
+                                        "
+                                        class="btn btn-sm btn-primary mr-1"
+                                    >
+                                        Finalizar
+                                    </Link>
                                     <button
                                         @click="deleteOrder(order.id)"
                                         class="btn btn-sm btn-danger"
@@ -109,8 +151,8 @@ const deleteOrder = (orderId) => {
                                 </td>
                             </tr>
                             <tr v-if="orders.data.length === 0">
-                                <td colspan="5" class="text-center">
-                                    Nenhum pedido encontrado
+                                <td colspan="6" class="text-center">
+                                    Nenhum pedido encontrado.
                                 </td>
                             </tr>
                         </tbody>

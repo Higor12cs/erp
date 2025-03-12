@@ -149,7 +149,7 @@ onMounted(() => {
                             <table class="table table-bordered">
                                 <thead>
                                     <tr class="text-nowrap">
-                                        <th>#</th>
+                                        <th>Item</th>
                                         <th>Produto</th>
                                         <th>Quantidade</th>
                                         <th>Preço Unit.</th>
@@ -189,6 +189,108 @@ onMounted(() => {
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">Recebíveis</div>
+                    <div class="card-body">
+                        <div
+                            v-if="
+                                order.receivables &&
+                                order.receivables.length > 0
+                            "
+                        >
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Método de Pagamento</th>
+                                            <th>Vencimento</th>
+                                            <th>Valor</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            v-for="receivable in order.receivables"
+                                            :key="receivable.id"
+                                        >
+                                            <td>
+                                                {{
+                                                    String(
+                                                        receivable.sequential_id
+                                                    ).padStart(6, "0")
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    receivable.payment_method
+                                                        ?.name || "N/A"
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    formatDate(
+                                                        receivable.due_date
+                                                    )
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    formatCurrency(
+                                                        receivable.total_amount
+                                                    )
+                                                }}
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="badge"
+                                                    :class="{
+                                                        'bg-success':
+                                                            receivable.status ===
+                                                            'paid',
+                                                        'bg-warning':
+                                                            receivable.status ===
+                                                            'partial',
+                                                        'bg-danger':
+                                                            receivable.status ===
+                                                            'pending',
+                                                    }"
+                                                >
+                                                    {{
+                                                        receivable.status ===
+                                                        "paid"
+                                                            ? "Pago"
+                                                            : receivable.status ===
+                                                              "partial"
+                                                            ? "Parcial"
+                                                            : "Pendente"
+                                                    }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="alert alert-info">
+                                Este pedido ainda não possui recebíveis.
+                                <Link
+                                    :href="
+                                        route(
+                                            'orders.create-receivables',
+                                            order.id
+                                        )
+                                    "
+                                    class="btn btn-sm btn-primary ml-2"
+                                >
+                                    Criar Recebíveis
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -121,8 +121,8 @@ const cancelDelete = () => {
                                     }}
                                 </td>
                                 <td>{{ product.name }}</td>
-                                <td>{{ product.group.section.name }}</td>
-                                <td>{{ product.group.name }}</td>
+                                <td>{{ product?.group?.section?.name }}</td>
+                                <td>{{ product?.group?.name }}</td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link

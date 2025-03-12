@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Receivable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -121,9 +122,57 @@ class OrderService
         });
     }
 
+    public function createReceivables(Order $order, array $receivablesData): void
+    {
+        $totalReceivablesAmount = 0;
+
+        foreach ($receivablesData as $receivable) {
+            $totalReceivablesAmount += $receivable['amount'];
+        }
+
+        if (abs($totalReceivablesAmount - $order->total_price) > 0.01) {
+            throw new \Exception('O valor total dos recebíveis deve ser igual ao valor do pedido.');
+        }
+
+        DB::transaction(function () use ($order, $receivablesData) {
+            foreach ($receivablesData as $receivableData) {
+                Receivable::create([
+                    'order_id' => $order->id,
+                    'customer_id' => $order->customer_id,
+                    'payment_method_id' => $receivableData['payment_method_id'],
+                    'is_manual' => false,
+                    'issue_date' => $order->issue_date,
+                    'due_date' => $receivableData['due_date'],
+                    'total_amount' => $receivableData['amount'],
+                    'paid_amount' => 0,
+                    'fees' => 0,
+                    'discount' => 0,
+                    'remaining_amount' => $receivableData['amount'],
+                    'status' => 'pending',
+                    'description' => $receivableData['description'] ?? 'Recebível gerado automaticamente',
+                    'created_by' => Auth::id(),
+                ]);
+            }
+        });
+    }
+
     public function deleteOrder(Order $order): void
     {
+        $hasPayments = false;
+
+        foreach ($order->receivables as $receivable) {
+            if ($receivable->paid_amount > 0) {
+                $hasPayments = true;
+                break;
+            }
+        }
+
+        if ($hasPayments) {
+            throw new \Exception('Não é possível excluir um pedido com recebíveis que possuem baixas.');
+        }
+
         DB::transaction(function () use ($order) {
+            $order->receivables()->delete();
             $order->items()->delete();
             $order->delete();
         });
