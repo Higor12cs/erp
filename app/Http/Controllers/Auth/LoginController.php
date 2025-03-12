@@ -25,7 +25,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            return to_route('home.index');
+            return response()->make('', 409, ['X-Inertia-Location' => route('home.index')]);
         }
 
         return back()->with('error', 'Credenciais inválidas.');
