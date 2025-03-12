@@ -61,6 +61,37 @@ const sidebarItems = ref([
         permission: "orders.view",
     },
 
+    // Financeiro
+    {
+        type: "header",
+        label: "Financeiro",
+    },
+    {
+        type: "collapsible",
+        iconClass: "fas fa-university",
+        label: "Financeiro",
+        subItems: [
+            {
+                routeName: "receivables.index",
+                iconClass: "fas fa-arrow-down",
+                label: "Recebíveis",
+                permission: "receivables.view",
+            },
+            {
+                routeName: "accounts.index",
+                iconClass: "fas fa-university",
+                label: "Contas",
+                permission: "accounts.view",
+            },
+            {
+                routeName: "payment-methods.index",
+                iconClass: "fas fa-wallet",
+                label: "Métodos de Pagamento",
+                permission: "payment-methods.view",
+            },
+        ],
+    },
+
     // Estoque
     {
         type: "header",

@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tenant_sequences', function (Blueprint $table) {
+        Schema::create('payment_methods', function (Blueprint $table) {
+            $table->uuid('id')->primary()->unique();
             $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
-            $table->string('entity_type')->index();
-            $table->unsignedBigInteger('last_sequence_value')->default(0);
+            $table->unsignedBigInteger('sequential_id')->index();
+            $table->string('name');
+            $table->string('type');
+            $table->boolean('active')->default(true);
+            $table->foreignUuid('created_by')->constrained('users');
             $table->timestamps();
-            $table->primary(['tenant_id', 'entity_type']);
         });
     }
 
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tenant_sequences');
+        Schema::dropIfExists('payment_methods');
     }
 };

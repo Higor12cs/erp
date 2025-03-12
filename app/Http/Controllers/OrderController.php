@@ -86,7 +86,7 @@ class OrderController extends Controller
                 'data' => $orders->map(function (Order $order) {
                     return [
                         'id' => $order->id,
-                        'name' => 'Pedido #' . $order->sequential_id . ' - ' . $order->issue_date->format('d/m/Y'),
+                        'name' => 'Pedido #'.$order->sequential_id.' - '.$order->issue_date->format('d/m/Y'),
                         'total' => $order->total_price,
                     ];
                 }),
@@ -102,7 +102,7 @@ class OrderController extends Controller
             'data' => $orders->map(function (Order $order) {
                 return [
                     'id' => $order->id,
-                    'name' => 'Pedido #' . $order->sequential_id . ' - ' . $order->issue_date->format('d/m/Y'),
+                    'name' => 'Pedido #'.$order->sequential_id.' - '.$order->issue_date->format('d/m/Y'),
                     'total' => $order->total_price,
                 ];
             }),
