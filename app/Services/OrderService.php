@@ -154,6 +154,8 @@ class OrderService
                 ]);
             }
         });
+
+        app(StockService::class)->processStockForOrder($order);
     }
 
     public function deleteOrder(Order $order): void

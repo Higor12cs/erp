@@ -5,6 +5,8 @@ import { onMounted } from "vue";
 import NavItem from "@/Components/NavItem.vue";
 import NavItemCollapsible from "@/Components/NavItemCollapsible.vue";
 
+const appName = import.meta.env.VITE_APP_NAME || "";
+
 const currentTime = ref("");
 
 const sidebarItems = ref([
@@ -54,11 +56,25 @@ const sidebarItems = ref([
         label: "Vendas",
     },
     {
-        type: "link",
-        routeName: "orders.index",
+        type: "collapsible",
         iconClass: "fas fa-shopping-basket",
         label: "Pedidos",
-        permission: "orders.view",
+        subItems: [
+            {
+                type: "link",
+                routeName: "orders.index",
+                iconClass: "fas fa-shopping-basket",
+                label: "Pedidos",
+                permission: "orders.view",
+            },
+            {
+                type: "link",
+                routeName: "orders.create",
+                iconClass: "fas fa-shopping-basket",
+                label: "Novo Pedido",
+                permission: "orders.create",
+            },
+        ],
     },
 
     // Compras
@@ -67,11 +83,23 @@ const sidebarItems = ref([
         label: "Compras",
     },
     {
-        type: "link",
-        routeName: "purchases.index",
-        iconClass: "fas fa-truck",
+        type: "collapsible",
+        iconClass: "fas fa-truck-loading",
         label: "Compras",
-        permission: "purchases.view",
+        subItems: [
+            {
+                routeName: "purchases.index",
+                iconClass: "fas fa-truck-loading",
+                label: "Compras",
+                permission: "purchases.view",
+            },
+            {
+                routeName: "purchases.create",
+                iconClass: "fas fa-truck-loading",
+                label: "Nova Compra",
+                permission: "purchases.create",
+            },
+        ],
     },
 
     // Financeiro
@@ -119,9 +147,23 @@ const sidebarItems = ref([
     {
         type: "link",
         routeName: "products.index",
-        iconClass: "fas fa-boxes",
+        iconClass: "fas fa-box",
         label: "Produtos",
         permission: "products.view",
+    },
+    {
+        type: "link",
+        routeName: "stock.index",
+        iconClass: "fas fa-boxes",
+        label: "Estoque",
+        permission: "stock.view",
+    },
+    {
+        type: "link",
+        routeName: "kardex.index",
+        iconClass: "fas fa-dolly",
+        label: "Kardex",
+        permission: "kardex.view",
     },
     {
         type: "collapsible",
@@ -216,7 +258,9 @@ onMounted(() => {
 
         <aside class="main-sidebar sidebar-dark-primary elevation-2">
             <Link href="/" class="brand-link d-flex justify-content-center">
-                <span class="brand-text font-weight-semibold">AdminLTE</span>
+                <span class="brand-text font-weight-semibold">
+                    {{ appName }}
+                </span>
             </Link>
 
             <div class="sidebar">
@@ -281,6 +325,12 @@ onMounted(() => {
                 </div>
             </section>
         </div>
+
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-inline">
+                <strong>{{ appName }}</strong> 0.0.1
+            </div>
+        </footer>
 
         <aside class="control-sidebar control-sidebar-dark"></aside>
     </div>

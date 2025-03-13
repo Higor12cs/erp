@@ -145,6 +145,8 @@ class PurchaseService
                 ]);
             }
         });
+
+        app(StockService::class)->processStockForPurchase($purchase);
     }
 
     public function deletePurchase(Purchase $purchase): void

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\KardexController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PayableController;
 use App\Http\Controllers\PayablePaymentController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReceivablePaymentController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -48,7 +50,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/brands/search', [BrandController::class, 'search'])->name('brands.search');
         Route::get('/sections/search', [SectionController::class, 'search'])->name('sections.search');
         Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.search');
-        Route::get('/orders/search', [OrderController::class, 'search'])->name('orders.search');
         Route::get('/accounts/search', [AccountController::class, 'search'])->name('accounts.search');
         Route::get('/payment-methods/search', [PaymentMethodController::class, 'search'])->name('payment-methods.search');
     });
@@ -176,4 +177,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/formas-pagamento/{paymentMethod:sequential_id}/editar', [PaymentMethodController::class, 'edit'])->name('payment-methods.edit');
     Route::put('/formas-pagamento/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('payment-methods.update');
     Route::delete('/formas-pagamento/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('payment-methods.destroy');
+
+    // Estoque
+    Route::get('/estoque', [StockController::class, 'index'])->name('stock.index');
+    Route::get('/estoque/{stock:sequential_id}/ajuste', [StockController::class, 'adjust'])->name('stock.adjust');
+    Route::post('/estoque/{stock}/ajuste', [StockController::class, 'storeAdjustment'])->name('stock.store-adjustment');
+
+    // Kardex
+    Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
 });

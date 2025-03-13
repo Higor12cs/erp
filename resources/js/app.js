@@ -17,19 +17,31 @@ const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 window.initAdminLTE = function () {
     if (window.$ && window.$.AdminLTE) {
-        window.$.AdminLTE.init();
+        if (!window.adminLTEInitialized) {
+            window.$.AdminLTE.init();
+            window.adminLTEInitialized = true;
+        }
     }
 
     if (window.$ && window.$.fn.Treeview) {
-        $('[data-widget="treeview"]').Treeview('init');
+        const treeViewElements = $('[data-widget="treeview"]').not('.treeview-initialized');
+        if (treeViewElements.length) {
+            treeViewElements.Treeview('init').addClass('treeview-initialized');
+        }
     }
 
     if (window.$ && window.$.fn.PushMenu) {
-        $('[data-widget="pushmenu"]').PushMenu('init');
+        const pushMenuElements = $('[data-widget="pushmenu"]').not('.pushmenu-initialized');
+        if (pushMenuElements.length) {
+            pushMenuElements.PushMenu('init').addClass('pushmenu-initialized');
+        }
     }
 
     if (window.$ && window.$.fn.Layout) {
-        $('[data-widget="layout"]').Layout('init');
+        const layoutElements = $('[data-widget="layout"]').not('.layout-initialized');
+        if (layoutElements.length) {
+            layoutElements.Layout('init').addClass('layout-initialized');
+        }
     }
 }
 

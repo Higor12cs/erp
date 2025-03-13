@@ -128,37 +128,4 @@ class OrderController extends Controller
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
-    public function search(Request $request)
-    {
-        if ($request->has('ids')) {
-            $ids = explode(',', $request->ids);
-            $orders = Order::whereIn('id', $ids)->get();
-
-            return response()->json([
-                'data' => $orders->map(function (Order $order) {
-                    return [
-                        'id' => $order->id,
-                        'name' => 'Pedido #'.$order->sequential_id.' - '.$order->issue_date->format('d/m/Y'),
-                        'total' => $order->total_price,
-                    ];
-                }),
-            ]);
-        }
-
-        $query = $request->search ?? '';
-        $orders = Order::where('sequential_id', 'like', "%{$query}%")
-            ->limit(10)
-            ->get();
-
-        return response()->json([
-            'data' => $orders->map(function (Order $order) {
-                return [
-                    'id' => $order->id,
-                    'name' => 'Pedido #'.$order->sequential_id.' - '.$order->issue_date->format('d/m/Y'),
-                    'total' => $order->total_price,
-                ];
-            }),
-        ]);
-    }
 }

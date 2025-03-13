@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Services\StockService;
 use App\Traits\BelongsToTenant;
 use App\Traits\Sequential;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -27,5 +29,17 @@ class Product extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function stock(): HasOne
+    {
+        return $this->hasOne(Stock::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($product) {
+            app(StockService::class)->initializeStock($product);
+        });
     }
 }
