@@ -7,7 +7,7 @@ import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
 
 const props = defineProps({
-    orders: Object,
+    purchases: Object,
 });
 
 const formatCurrency = (value) => {
@@ -26,14 +26,14 @@ const showDeleteModal = ref(false);
 const deleteId = ref(null);
 const loading = ref(false);
 
-const confirmDelete = (orderId) => {
-    deleteId.value = orderId;
+const confirmDelete = (purchaseId) => {
+    deleteId.value = purchaseId;
     showDeleteModal.value = true;
 };
 
 const handleDelete = () => {
     loading.value = true;
-    return route("orders.destroy", deleteId.value);
+    return route("purchases.destroy", deleteId.value);
 };
 
 const cancelDelete = () => {
@@ -43,36 +43,36 @@ const cancelDelete = () => {
 </script>
 
 <template>
-    <Head title="Pedidos" />
+    <Head title="Compras" />
     <AuthenticatedLayout>
         <div class="d-flex justify-content-between mb-3">
             <div>
-                <h4>Pedidos</h4>
+                <h4>Compras</h4>
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Pedidos' },
+                        { label: 'Compras' },
                     ]"
                 />
             </div>
             <Link
-                :href="route('orders.create')"
+                :href="route('purchases.create')"
                 class="btn btn-primary mb-auto"
             >
                 <i class="fas fa-sm fa-plus"></i>
-                &nbsp; Novo Pedido
+                &nbsp; Nova Compra
             </Link>
         </div>
 
         <div class="card">
-            <div class="card-header">Pedidos</div>
+            <div class="card-header">Compras</div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th class="col-1">Código</th>
-                                <th class="col-5">Cliente</th>
+                                <th class="col-5">Fornecedor</th>
                                 <th class="col-2">Data</th>
                                 <th class="col-1">Status</th>
                                 <th class="col-2">Valor</th>
@@ -80,42 +80,47 @@ const cancelDelete = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="order in orders.data" :key="order.id">
+                            <tr
+                                v-for="purchase in purchases.data"
+                                :key="purchase.id"
+                            >
                                 <td>
                                     {{
-                                        String(order.sequential_id).padStart(
+                                        String(purchase.sequential_id).padStart(
                                             6,
                                             "0"
                                         )
                                     }}
                                 </td>
-                                <td>{{ order.customer.first_name }}</td>
-                                <td>{{ formatDate(order.issue_date) }}</td>
+                                <td>{{ purchase.supplier.first_name }}</td>
+                                <td>{{ formatDate(purchase.issue_date) }}</td>
                                 <td>
                                     <span
                                         class="badge"
                                         :class="
-                                            order.receivables &&
-                                            order.receivables.length
+                                            purchase.payables &&
+                                            purchase.payables.length
                                                 ? 'bg-success'
                                                 : 'bg-warning'
                                         "
                                     >
                                         {{
-                                            order.receivables &&
-                                            order.receivables.length
+                                            purchase.payables &&
+                                            purchase.payables.length
                                                 ? "Finalizado"
                                                 : "Pendente"
                                         }}
                                     </span>
                                 </td>
-                                <td>{{ formatCurrency(order.total_price) }}</td>
+                                <td>
+                                    {{ formatCurrency(purchase.total_cost) }}
+                                </td>
                                 <td class="text-nowrap">
                                     <Link
                                         :href="
                                             route(
-                                                'orders.show',
-                                                order.sequential_id
+                                                'purchases.show',
+                                                purchase.sequential_id
                                             )
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
@@ -125,14 +130,14 @@ const cancelDelete = () => {
                                     <Link
                                         v-if="
                                             !(
-                                                order.receivables &&
-                                                order.receivables.length
+                                                purchase.payables &&
+                                                purchase.payables.length
                                             )
                                         "
                                         :href="
                                             route(
-                                                'orders.edit',
-                                                order.sequential_id
+                                                'purchases.edit',
+                                                purchase.sequential_id
                                             )
                                         "
                                         class="btn btn-sm btn-secondary mr-1"
@@ -142,14 +147,14 @@ const cancelDelete = () => {
                                     <Link
                                         v-if="
                                             !(
-                                                order.receivables &&
-                                                order.receivables.length
+                                                purchase.payables &&
+                                                purchase.payables.length
                                             )
                                         "
                                         :href="
                                             route(
-                                                'orders.create-receivables',
-                                                order.sequential_id
+                                                'purchases.create-payables',
+                                                purchase.sequential_id
                                             )
                                         "
                                         class="btn btn-sm btn-primary mr-1"
@@ -157,22 +162,22 @@ const cancelDelete = () => {
                                         Finalizar
                                     </Link>
                                     <button
-                                        @click="confirmDelete(order.id)"
+                                        @click="confirmDelete(purchase.id)"
                                         class="btn btn-sm btn-danger"
                                     >
                                         Excluir
                                     </button>
                                 </td>
                             </tr>
-                            <tr v-if="orders.data.length === 0">
+                            <tr v-if="purchases.data.length === 0">
                                 <td colspan="6" class="text-center">
-                                    Nenhum pedido encontrado.
+                                    Nenhuma compra encontrada.
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <Pagination :links="orders.links" />
+                <Pagination :links="purchases.links" />
             </div>
         </div>
 
@@ -181,13 +186,13 @@ const cancelDelete = () => {
             :visible="showDeleteModal"
             :loading="loading"
             title="Confirmar Exclusão"
-            message="Você tem certeza que deseja excluir este pedido?"
+            message="Você tem certeza que deseja excluir esta compra?"
             warning="Esta ação não pode ser desfeita."
             delete-route-method="delete"
             :delete-route="handleDelete"
             @cancel="cancelDelete"
-            success-redirect="orders.index"
-            success-message="Pedido excluído com sucesso!"
+            success-redirect="purchases.index"
+            success-message="Compra excluída com sucesso!"
         />
     </AuthenticatedLayout>
 </template>

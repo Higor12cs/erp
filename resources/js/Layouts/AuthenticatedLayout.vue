@@ -61,6 +61,19 @@ const sidebarItems = ref([
         permission: "orders.view",
     },
 
+    // Compras
+    {
+        type: "header",
+        label: "Compras",
+    },
+    {
+        type: "link",
+        routeName: "purchases.index",
+        iconClass: "fas fa-truck",
+        label: "Compras",
+        permission: "purchases.view",
+    },
+
     // Financeiro
     {
         type: "header",
@@ -76,6 +89,12 @@ const sidebarItems = ref([
                 iconClass: "fas fa-arrow-down",
                 label: "Recebíveis",
                 permission: "receivables.view",
+            },
+            {
+                routeName: "payables.index",
+                iconClass: "fas fa-arrow-up",
+                label: "Pagáveis",
+                permission: "payables.view",
             },
             {
                 routeName: "accounts.index",

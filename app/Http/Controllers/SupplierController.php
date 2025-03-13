@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
@@ -65,5 +66,36 @@ class SupplierController extends Controller
         $supplier->delete();
 
         return to_route('suppliers.index');
+    }
+
+    public function search(Request $request)
+    {
+        if ($request->has('ids')) {
+            $ids = explode(',', $request->ids);
+            $suppliers = Supplier::whereIn('id', $ids)->get();
+
+            return response()->json([
+                'data' => $suppliers->map(function (Supplier $supplier) {
+                    return [
+                        'id' => $supplier->id,
+                        'name' => $supplier->first_name . ' ' . $supplier->last_name,
+                    ];
+                }),
+            ]);
+        }
+
+        $query = $request->search ?? '';
+        $suppliers = Supplier::where('first_name', 'like', "%{$query}%")
+            ->limit(10)
+            ->get();
+
+        return response()->json([
+            'data' => $suppliers->map(function (Supplier $supplier) {
+                return [
+                    'id' => $supplier->id,
+                    'name' => $supplier->first_name . ' ' . $supplier->last_name,
+                ];
+            }),
+        ]);
     }
 }

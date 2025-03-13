@@ -8,8 +8,11 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PayableController;
+use App\Http\Controllers\PayablePaymentController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReceivablePaymentController;
 use App\Http\Controllers\SectionController;
@@ -23,9 +26,9 @@ Route::redirect('/', '/home');
 
 // Rotas de autenticação
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login');
+    Route::get('/login', fn() => Inertia::render('Auth/Login'))->name('login');
     Route::post('/login', LoginController::class)->name('login.attempt');
-    Route::get('/registrar', fn () => Inertia::render('Auth/Register'))->name('register');
+    Route::get('/registrar', fn() => Inertia::render('Auth/Register'))->name('register');
     Route::post('/registrar', RegisterController::class)->name('register.attempt');
 });
 
@@ -34,12 +37,13 @@ Route::post('/logout', LogoutController::class)->name('logout')->middleware('aut
 // Rotas protegidas por autenticação
 Route::middleware('auth')->group(function () {
     // Páginas principais
-    Route::get('/home', fn () => Inertia::render('Home/Index'))->name('home.index');
-    Route::get('/dashboard', fn () => Inertia::render('Dashboard/Index'))->name('dashboard.index');
+    Route::get('/home', fn() => Inertia::render('Home/Index'))->name('home.index');
+    Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index'))->name('dashboard.index');
 
     // Rotas de API
     Route::prefix('/api')->as('api.')->group(function () {
         Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search');
+        Route::get('/suppliers/search', [SupplierController::class, 'search'])->name('suppliers.search');
         Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
         Route::get('/brands/search', [BrandController::class, 'search'])->name('brands.search');
         Route::get('/sections/search', [SectionController::class, 'search'])->name('sections.search');
@@ -63,6 +67,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/recebiveis', [ReceivableController::class, 'destroy'])->name('receivables.destroy');
     Route::get('/recebiveis/{receivable}/editar', [ReceivableController::class, 'edit'])->name('receivables.edit');
     Route::post('/recebiveis/{receivable}', [ReceivableController::class, 'update'])->name('receivables.update');
+
+    // Rotas de pagamentos de pagáveis
+    Route::get('/pagaveis/pagamentos', [PayablePaymentController::class, 'index'])->name('payables.payments.index');
+    Route::get('/pagaveis/pagamentos/novo', [PayablePaymentController::class, 'create'])->name('payables.payments.create');
+    Route::post('/pagaveis/pagamentos', [PayablePaymentController::class, 'store'])->name('payables.payments.store');
+    Route::get('/pagaveis/pagamentos/{payment:sequential_id}', [PayablePaymentController::class, 'show'])->name('payables.payments.show');
+    Route::delete('/pagaveis/pagamentos/{payment}', [PayablePaymentController::class, 'destroy'])->name('payables.payments.destroy');
+
+    // Pagáveis routes
+    Route::get('/pagaveis', [PayableController::class, 'index'])->name('payables.index');
+    Route::get('/pagaveis/criar', [PayableController::class, 'create'])->name('payables.create');
+    Route::post('/pagaveis', [PayableController::class, 'store'])->name('payables.store');
+    Route::delete('/pagaveis', [PayableController::class, 'destroy'])->name('payables.destroy');
+    Route::get('/pagaveis/{payable}/editar', [PayableController::class, 'edit'])->name('payables.edit');
+    Route::post('/pagaveis/{payable}', [PayableController::class, 'update'])->name('payables.update');
 
     // Clientes
     Route::get('/clientes', [CustomerController::class, 'index'])->name('customers.index');
@@ -130,6 +149,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pedidos/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::get('/pedidos/{order:sequential_id}/recebiveis/criar', [OrderController::class, 'createReceivables'])->name('orders.create-receivables');
     Route::post('/pedidos/{order}/recebiveis', [OrderController::class, 'storeReceivables'])->name('orders.store-receivables');
+
+    // Compras routes
+    Route::get('/compras', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('/compras/criar', [PurchaseController::class, 'create'])->name('purchases.create');
+    Route::post('/compras', [PurchaseController::class, 'store'])->name('purchases.store');
+    Route::get('/compras/{purchase:sequential_id}/editar', [PurchaseController::class, 'edit'])->name('purchases.edit');
+    Route::get('/compras/{purchase:sequential_id}', [PurchaseController::class, 'show'])->name('purchases.show');
+    Route::put('/compras/{purchase}', [PurchaseController::class, 'update'])->name('purchases.update');
+    Route::delete('/compras/{purchase}', [PurchaseController::class, 'destroy'])->name('purchases.destroy');
+    Route::get('/compras/{purchase:sequential_id}/pagaveis/criar', [PurchaseController::class, 'createPayables'])->name('purchases.create-payables');
+    Route::post('/compras/{purchase}/pagaveis', [PurchaseController::class, 'storePayables'])->name('purchases.store-payables');
 
     // Contas
     Route::get('/contas', [AccountController::class, 'index'])->name('accounts.index');
