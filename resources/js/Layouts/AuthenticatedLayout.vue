@@ -147,6 +147,12 @@ const updateTime = () => {
 onMounted(() => {
     updateTime();
     setInterval(updateTime, 1000);
+
+    setTimeout(() => {
+        if (window.initAdminLTE) {
+            window.initAdminLTE();
+        }
+    }, 200);
 });
 </script>
 
