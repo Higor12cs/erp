@@ -275,7 +275,7 @@ onMounted(() => {
                             v-for="(item, index) in sidebarItems"
                             :key="index"
                         >
-                            <!-- Header item -->
+                            <!-- Header Item -->
                             <li
                                 v-if="item.type === 'header'"
                                 class="nav-header"
