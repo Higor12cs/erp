@@ -75,6 +75,11 @@ class PurchaseService
 
             foreach ($purchaseData['items'] as $item) {
                 $purchase->items()->create($item);
+
+                $product = Product::findOrFail($item['product_id']);
+                $product->update([
+                    'cost' => $item['unit_cost'],
+                ]);
             }
 
             return $purchase;
@@ -107,6 +112,11 @@ class PurchaseService
                 } else {
                     $purchase->items()->create($item);
                 }
+
+                $product = Product::findOrFail($item['product_id']);
+                $product->update([
+                    'cost' => $item['unit_cost'],
+                ]);
             }
 
             return $purchase->fresh(['items', 'createdBy']);
