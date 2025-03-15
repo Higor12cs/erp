@@ -31,6 +31,18 @@ createInertiaApp({
 
         app.mount(el);
 
+        jQuery(function () {
+            try {
+                $('[data-widget="treeview"]').Treeview("destroy");
+            } catch (e) {
+                //
+            }
+
+            setTimeout(function () {
+                $('[data-widget="treeview"]').Treeview("init");
+            }, 200);
+        });
+
         return app;
     },
     progress: {

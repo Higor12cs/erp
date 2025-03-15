@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 import NavItem from "@/Components/NavItem.vue";
@@ -325,7 +325,7 @@ onMounted(() => {
                 <nav class="mt-2">
                     <ul
                         class="nav nav-pills nav-sidebar flex-column"
-                        data-widget="treeindex"
+                        data-widget="treeview"
                         role="menu"
                         data-accordion="false"
                     >
