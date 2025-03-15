@@ -104,7 +104,12 @@ const submit = () => {
                                 </td>
                                 <td class="text-nowrap">
                                     <Link
-                                        :href="route('stock.adjust', stock.sequential_id)"
+                                        :href="
+                                            route(
+                                                'stock.adjust',
+                                                stock.sequential_id
+                                            )
+                                        "
                                         class="btn btn-sm btn-primary mr-1"
                                     >
                                         Ajustar Estoque

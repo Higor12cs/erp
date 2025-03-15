@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Purchase;
-use App\Models\Product;
 use App\Models\Payable;
+use App\Models\Product;
+use App\Models\Purchase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 

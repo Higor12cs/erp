@@ -24,7 +24,10 @@ const form = useForm({
     paymentMethod_number: props.paymentMethod.paymentMethod_number || "",
     paymentMethod_number: props.paymentMethod.paymentMethod_number || "",
     current_balance: props.paymentMethod.current_balance || "",
-    active: props.paymentMethod.active !== undefined ? props.paymentMethod.active : true,
+    active:
+        props.paymentMethod.active !== undefined
+            ? props.paymentMethod.active
+            : true,
 });
 
 const submit = () => {
@@ -63,7 +66,9 @@ defineExpose({ form });
                     >
                         <option value="">-</option>
                         <option value="bank_slip">Boleto Bancário</option>
-                        <option value="bank_transfer">Transferência Bancária</option>
+                        <option value="bank_transfer">
+                            Transferência Bancária
+                        </option>
                         <option value="cash">Dinheiro</option>
                         <option value="credit_card">Cartão de Crédito</option>
                         <option value="debit_card">Cartão de Débito</option>
@@ -71,7 +76,7 @@ defineExpose({ form });
                     </select>
                 </div>
             </div>
-            </div>
+        </div>
 
         <div class="row">
             <div class="col-8">

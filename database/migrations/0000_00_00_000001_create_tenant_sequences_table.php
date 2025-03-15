@@ -15,7 +15,6 @@ return new class extends Migration
             $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
             $table->string('entity_type')->index();
             $table->unsignedBigInteger('last_sequence_value')->default(0);
-            $table->timestamps();
             $table->primary(['tenant_id', 'entity_type']);
         });
     }

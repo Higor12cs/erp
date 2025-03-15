@@ -107,7 +107,10 @@ const cancelDelete = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="account in accounts.data" :key="account.id">
+                            <tr
+                                v-for="account in accounts.data"
+                                :key="account.id"
+                            >
                                 <td>
                                     {{
                                         String(account.sequential_id).padStart(
@@ -124,10 +127,7 @@ const cancelDelete = () => {
                                     >
                                         Ativo
                                     </span>
-                                    <span
-                                        v-else
-                                        class="badge badge-danger"
-                                    >
+                                    <span v-else class="badge badge-danger">
                                         Inativo
                                     </span>
                                 </td>

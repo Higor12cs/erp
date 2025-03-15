@@ -34,22 +34,22 @@ watch(
     }, 300)
 );
 
-// onMounted(() => {
-//     if (window.$ && window.$.fn.DataTable) {
-//         $("#usersTable").DataTable({
-//             paging: false,
-//             searching: false,
-//             ordering: true,
-//             info: false,
-//             responsive: true,
-//             language: {
-//                 emptyTable: "Nenhum usuário encontrado.",
-//             },
-//         });
-//     }
-// });
-
 const confirmDelete = (user) => {
+    // Check if user is the last admin
+    if (
+        user.roles &&
+        user.roles.some((role) => role.name === "Administrador")
+    ) {
+        const adminCount = props.users.data.filter(
+            (u) => u.roles && u.roles.some((r) => r.name === "Administrador")
+        ).length;
+
+        if (adminCount === 1) {
+            alert("Não é possível excluir o único usuário administrador.");
+            return;
+        }
+    }
+
     deleteUserId.value = user.id;
     showDeleteModal.value = true;
 };
@@ -113,20 +113,56 @@ const cancelDelete = () => {
                         <thead>
                             <tr>
                                 <th class="col-1">Código</th>
-                                <th class="col-5">Nome</th>
-                                <th class="col-5">Email</th>
+                                <th class="col-4">Nome</th>
+                                <th class="col-4">Email</th>
+                                <th class="col-2">Papel</th>
                                 <th class="col-1">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="user in users.data" :key="user.id">
-                                <td>{{ String(user.sequential_id).padStart(6, '0') }}</td>
+                                <td>
+                                    {{
+                                        String(user.sequential_id).padStart(
+                                            6,
+                                            "0"
+                                        )
+                                    }}
+                                </td>
                                 <td>{{ user.name }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>
+                                    <span
+                                        v-if="
+                                            user.roles && user.roles.length > 0
+                                        "
+                                    >
+                                        <span
+                                            v-for="(role, index) in user.roles"
+                                            :key="role.id"
+                                            class="badge"
+                                            :class="
+                                                role.name === 'Administrador'
+                                                    ? 'badge-primary'
+                                                    : 'badge-secondary'
+                                            "
+                                        >
+                                            {{ role.name }}
+                                        </span>
+                                    </span>
+                                    <span v-else class="text-muted"
+                                        >Sem papel</span
+                                    >
+                                </td>
+                                <td>
                                     <div class="text-nowrap">
                                         <Link
-                                            :href="route('users.edit', user.id)"
+                                            :href="
+                                                route(
+                                                    'users.edit',
+                                                    user.sequential_id
+                                                )
+                                            "
                                             class="btn btn-sm btn-secondary mr-1"
                                         >
                                             Editar
@@ -141,7 +177,7 @@ const cancelDelete = () => {
                                 </td>
                             </tr>
                             <tr v-if="users.data.length === 0">
-                                <td colspan="3" class="text-center">
+                                <td colspan="5" class="text-center">
                                     Nenhum usuário encontrado
                                 </td>
                             </tr>

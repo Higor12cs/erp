@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StockAdjustmentRequest;
-use App\Models\Product;
 use App\Models\Stock;
 use App\Services\StockService;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class StockController extends Controller
 {

@@ -7,7 +7,6 @@ use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\OrderUpdateRequest;
 use App\Models\Order;
 use App\Services\OrderService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class OrderController extends Controller

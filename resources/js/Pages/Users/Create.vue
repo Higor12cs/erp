@@ -2,13 +2,15 @@
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
-import Breadcrumb from "../../Components/Breadcrumb.vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
+import Select2 from "@/Components/Select2.vue";
 
 const form = useForm({
     name: "",
     email: "",
     password: "",
     password_confirmation: "",
+    role_id: null,
 });
 
 const submit = () => {
@@ -56,6 +58,7 @@ const submit = () => {
                             {{ form.errors.name }}
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input
@@ -69,6 +72,19 @@ const submit = () => {
                             {{ form.errors.email }}
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <Select2
+                            label="Papel"
+                            v-model="form.role_id"
+                            :error="form.errors.role_id"
+                            :search-url="route('api.roles.search')"
+                            value-key="id"
+                            label-key="name"
+                            placeholder="Pesquisar"
+                        />
+                    </div>
+
                     <div class="form-group">
                         <label for="password">Senha</label>
                         <input
@@ -85,6 +101,7 @@ const submit = () => {
                             {{ form.errors.password }}
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="password_confirmation"
                             >Confirmação Senha</label

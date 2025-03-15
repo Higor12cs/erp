@@ -2,7 +2,6 @@
 import { useForm } from "@inertiajs/vue3";
 import InputField from "@/Components/InputField.vue";
 import Select2 from "@/Components/Select2.vue";
-import { ref } from "vue";
 
 const props = defineProps({
     product: {

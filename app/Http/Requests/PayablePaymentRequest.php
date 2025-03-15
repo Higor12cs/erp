@@ -51,7 +51,7 @@ class PayablePaymentRequest extends FormRequest
             foreach ($this->payments as $index => $payment) {
                 $payable = Payable::findOrFail($payment['payable_id']);
 
-                if (!$payable) {
+                if (! $payable) {
                     continue;
                 }
 

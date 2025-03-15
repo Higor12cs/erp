@@ -1,6 +1,8 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+
+const appName = import.meta.env.VITE_APP_NAME || "";
 
 const form = useForm({
     email: "test@example.com",
@@ -21,13 +23,15 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="Entrar" />
 
     <div class="hold-transition login-page">
         <div class="login-box">
             <div class="card card-outline card-primary">
                 <div class="card-header text-center">
-                    <Link href="/" class="h1"><b>Admin</b>LTE</Link>
+                    <Link href="/" class="h1">
+                        {{ appName }}
+                    </Link>
                 </div>
                 <div class="card-body">
                     <p class="login-box-msg">Entre para iniciar sua sessão</p>
@@ -38,6 +42,7 @@ const submit = () => {
                                 id="email"
                                 type="email"
                                 class="form-control"
+                                :class="{ 'is-invalid': form.errors.email }"
                                 placeholder="Email"
                                 v-model="form.email"
                                 required
@@ -49,9 +54,12 @@ const submit = () => {
                                     <span class="fas fa-envelope"></span>
                                 </div>
                             </div>
-                        </div>
-                        <div v-if="form.errors.email" class="invalid-feedback">
-                            {{ form.errors.email }}
+                            <div
+                                v-if="form.errors.email"
+                                class="invalid-feedback"
+                            >
+                                {{ form.errors.email }}
+                            </div>
                         </div>
 
                         <div class="input-group mb-3">
@@ -69,12 +77,12 @@ const submit = () => {
                                     <span class="fas fa-lock"></span>
                                 </div>
                             </div>
-                        </div>
-                        <div
-                            v-if="form.errors.password"
-                            class="invalid-feedback"
-                        >
-                            {{ form.errors.password }}
+                            <div
+                                v-if="form.errors.password"
+                                class="invalid-feedback"
+                            >
+                                {{ form.errors.password }}
+                            </div>
                         </div>
 
                         <div class="row">
@@ -96,6 +104,7 @@ const submit = () => {
                                     type="submit"
                                     class="btn btn-primary btn-block"
                                     :disabled="processing"
+                                    style="border-radius: 0"
                                 >
                                     <span
                                         v-if="processing"
@@ -108,12 +117,18 @@ const submit = () => {
                             </div>
                         </div>
                     </form>
-
+                </div>
+                <div class="card-footer">
                     <p class="mb-1">
-                        <Link href="#">Esqueci minha senha</Link>
+                        <Link href="#" class="text-primary"
+                            >Esqueci minha senha</Link
+                        >
                     </p>
                     <p class="mb-0">
-                        <Link :href="route('register')" class="text-center">
+                        <Link
+                            :href="route('register')"
+                            class="text-primary text-center"
+                        >
                             Registre uma nova conta
                         </Link>
                     </p>

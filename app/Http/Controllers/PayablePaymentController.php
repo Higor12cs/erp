@@ -61,11 +61,11 @@ class PayablePaymentController extends Controller
 
         $supplierId = $payables->first()->supplier_id;
 
-        if ($payables->some(fn($r) => $r->supplier_id !== $supplierId)) {
+        if ($payables->some(fn ($r) => $r->supplier_id !== $supplierId)) {
             return to_route('payables.index')->with('error', 'Só é possível baixar pagáveis do mesmo fornecedor.');
         }
 
-        if ($payables->some(fn($r) => $r->status === 'paid')) {
+        if ($payables->some(fn ($r) => $r->status === 'paid')) {
             return to_route('payables.index')->with('error', 'Não é possível baixar pagáveis já pagos.');
         }
 
@@ -132,7 +132,7 @@ class PayablePaymentController extends Controller
         return DB::transaction(function () use ($payment) {
             $payable = $payment->payable;
 
-            if (!$payable) {
+            if (! $payable) {
                 return to_route('payables.payments.index')->with('error', 'Pagável associado não encontrado.');
             }
 

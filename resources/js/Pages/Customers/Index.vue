@@ -79,7 +79,10 @@ const cancelDelete = () => {
                 />
             </div>
 
-            <Link :href="route('customers.create')" class="btn btn-primary mb-auto">
+            <Link
+                :href="route('customers.create')"
+                class="btn btn-primary mb-auto"
+            >
                 <i class="fas fa-sm fa-plus"></i>
                 &nbsp; Novo Cliente
             </Link>
@@ -120,15 +123,30 @@ const cancelDelete = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="customer in customers.data" :key="customer.id">
-                                <td>{{ String(customer.sequential_id).padStart(6, '0') }}</td>
+                            <tr
+                                v-for="customer in customers.data"
+                                :key="customer.id"
+                            >
+                                <td>
+                                    {{
+                                        String(customer.sequential_id).padStart(
+                                            6,
+                                            "0"
+                                        )
+                                    }}
+                                </td>
                                 <td>{{ customer.first_name }}</td>
                                 <td>{{ customer.last_name }}</td>
                                 <td>{{ customer.legal_name }}</td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
-                                            :href="route('customers.edit', customer.sequential_id)"
+                                            :href="
+                                                route(
+                                                    'customers.edit',
+                                                    customer.sequential_id
+                                                )
+                                            "
                                             class="btn btn-sm btn-secondary mr-1"
                                         >
                                             Editar

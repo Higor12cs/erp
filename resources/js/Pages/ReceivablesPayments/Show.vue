@@ -66,7 +66,9 @@ const formatSequentialId = (id) => {
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <th class="pl-3" style="width: 200px">Código:</th>
+                                    <th class="pl-3" style="width: 200px">
+                                        Código:
+                                    </th>
                                     <td class="pr-3 text-right">
                                         {{
                                             formatSequentialId(
@@ -83,11 +85,15 @@ const formatSequentialId = (id) => {
                                 </tr>
                                 <tr>
                                     <th class="pl-3">Método de Pagamento:</th>
-                                    <td class="pr-3 text-right">{{ payment.payment_method.name }}</td>
+                                    <td class="pr-3 text-right">
+                                        {{ payment.payment_method.name }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th class="pl-3">Conta:</th>
-                                    <td class="pr-3 text-right">{{ payment.account.name }}</td>
+                                    <td class="pr-3 text-right">
+                                        {{ payment.account.name }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th class="pl-3">Valor Total:</th>
@@ -107,7 +113,9 @@ const formatSequentialId = (id) => {
                                 </tr>
                                 <tr>
                                     <th class="pl-3">Acréscimos:</th>
-                                    <td class="pr-3 text-right">{{ formatCurrency(payment.fees) }}</td>
+                                    <td class="pr-3 text-right">
+                                        {{ formatCurrency(payment.fees) }}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th class="pl-3">Descontos:</th>
@@ -129,7 +137,9 @@ const formatSequentialId = (id) => {
                                 </tr>
                                 <tr v-if="payment.notes">
                                     <th class="pl-3">Observações:</th>
-                                    <td class="pr-3 text-right">{{ payment.notes }}</td>
+                                    <td class="pr-3 text-right">
+                                        {{ payment.notes }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -144,7 +154,9 @@ const formatSequentialId = (id) => {
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <th class="pl-3" style="width: 200px">Código:</th>
+                                    <th class="pl-3" style="width: 200px">
+                                        Código:
+                                    </th>
                                     <td class="pr-3 text-right">
                                         {{
                                             formatSequentialId(
@@ -254,7 +266,9 @@ const formatSequentialId = (id) => {
                         <table class="table" v-if="payment.transaction">
                             <tbody>
                                 <tr>
-                                    <th class="pl-3" style="width: 200px">Código:</th>
+                                    <th class="pl-3" style="width: 200px">
+                                        Código:
+                                    </th>
                                     <td class="pr-3 text-right">
                                         {{
                                             formatSequentialId(

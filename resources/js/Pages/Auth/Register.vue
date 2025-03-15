@@ -2,11 +2,11 @@
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
 const form = useForm({
-    tenant_name: "",
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
+    tenant_name: "Acme Inc",
+    name: "Usuário Teste",
+    email: "test@example.com",
+    password: "password",
+    password_confirmation: "password",
 });
 
 const submit = () => {
@@ -66,10 +66,7 @@ const submit = () => {
                                 </div>
                             </div>
                         </div>
-                        <div
-                            v-if="form.errors.name"
-                            class="invalid-feedback"
-                        >
+                        <div v-if="form.errors.name" class="invalid-feedback">
                             {{ form.errors.name }}
                         </div>
 

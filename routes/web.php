@@ -16,10 +16,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReceivablePaymentController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\CheckRoutePermissionMiddleware;
+use App\Http\Middleware\SetCurrentTenantPermissionMiddleware;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -28,19 +31,19 @@ Route::redirect('/', '/home');
 
 // Rotas de autenticação
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn() => Inertia::render('Auth/Login'))->name('login');
+    Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login');
     Route::post('/login', LoginController::class)->name('login.attempt');
-    Route::get('/registrar', fn() => Inertia::render('Auth/Register'))->name('register');
+    Route::get('/registrar', fn () => Inertia::render('Auth/Register'))->name('register');
     Route::post('/registrar', RegisterController::class)->name('register.attempt');
 });
 
 Route::post('/logout', LogoutController::class)->name('logout')->middleware('auth');
 
 // Rotas protegidas por autenticação
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRoutePermissionMiddleware::class])->group(function () {
     // Páginas principais
-    Route::get('/home', fn() => Inertia::render('Home/Index'))->name('home.index');
-    Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index'))->name('dashboard.index');
+    Route::get('/home', fn () => Inertia::render('Home/Index'))->name('home.index');
+    Route::get('/dashboard', fn () => Inertia::render('Dashboard/Index'))->name('dashboard.index');
 
     // Rotas de API
     Route::prefix('/api')->as('api.')->group(function () {
@@ -52,6 +55,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.search');
         Route::get('/accounts/search', [AccountController::class, 'search'])->name('accounts.search');
         Route::get('/payment-methods/search', [PaymentMethodController::class, 'search'])->name('payment-methods.search');
+        Route::get('/roles/search', [RoleController::class, 'search'])->name('roles.search');
     });
 
     // Rotas de pagamentos de recebíveis
@@ -96,7 +100,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/fornecedores', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/fornecedores/criar', [SupplierController::class, 'create'])->name('suppliers.create');
     Route::post('/fornecedores', [SupplierController::class, 'store'])->name('suppliers.store');
-    Route::get('/fornecedores/{supplier}/editar', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::get('/fornecedores/{supplier:sequential_id}/editar', [SupplierController::class, 'edit'])->name('suppliers.edit');
     Route::put('/fornecedores/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
     Route::delete('/fornecedores/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
 
@@ -104,7 +108,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/usuarios', [UserController::class, 'index'])->name('users.index');
     Route::get('/usuarios/criar', [UserController::class, 'create'])->name('users.create');
     Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
-    Route::get('/usuarios/{user}/editar', [UserController::class, 'edit'])->name('users.edit');
+    Route::get('/usuarios/{sequential_id}/editar', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/usuarios/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/usuarios/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
@@ -185,4 +189,12 @@ Route::middleware('auth')->group(function () {
 
     // Kardex
     Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
+
+    // Roles
+    Route::get('/papeis', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/papeis/criar', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/papeis', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/papeis/{role}/editar', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/papeis/{role}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/papeis/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 });

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import Inputmask from "admin-lte/plugins/inputmask/jquery.inputmask.js";
+import Inputmask from "../../../node_modules/inputmask/dist/inputmask.es6.js";
 
 const props = defineProps({
     modelValue: {

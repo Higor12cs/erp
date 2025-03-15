@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -17,7 +18,16 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')
+                    ->where('tenant_id', Auth::user()->tenant_id)
+                    ->ignore($this->user),
+            ],
+            'role_id' => ['nullable', 'exists:roles,id'],
         ];
 
         if (! $this->user) {
@@ -31,8 +41,19 @@ class UserRequest extends FormRequest
     {
         $validated = parent::validated($key, $default);
 
+        // Hash the password if provided
         if (isset($validated['password']) && $validated['password']) {
             $validated['password'] = bcrypt($validated['password']);
+        }
+
+        // Add tenant_id for new users
+        if (! $this->user) {
+            $validated['tenant_id'] = Auth::user()->tenant_id;
+        }
+
+        // Remove role_id from validated data since we'll handle it separately in the controller
+        if (isset($validated['role_id'])) {
+            unset($validated['role_id']);
         }
 
         return $validated;
@@ -53,6 +74,7 @@ class UserRequest extends FormRequest
             'password.confirmed' => 'O campo senha não confere com a confirmação.',
             'password.min' => 'O campo senha deve ter no mínimo 8 caracteres.',
             'password.max' => 'O campo senha deve ter no máximo 255 caracteres.',
+            'role_id.exists' => 'O papel selecionado não existe.',
         ];
     }
 }

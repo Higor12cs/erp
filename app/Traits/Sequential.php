@@ -10,10 +10,12 @@ trait Sequential
     public static function bootSequential()
     {
         static::creating(function ($model) {
-            $tenantId = Auth::user()->tenant_id;
-            $entityType = $model->getTable();
+            if (Auth::check()) {
+                $tenantId = Auth::user()->tenant_id;
+                $entityType = $model->getTable();
 
-            $model->sequential_id = self::getNextSequential($tenantId, $entityType);
+                $model->sequential_id = self::getNextSequential($tenantId, $entityType);
+            }
         });
     }
 

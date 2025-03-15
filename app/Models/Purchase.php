@@ -60,6 +60,6 @@ class Purchase extends Model
 
     public function isEditable(): bool
     {
-        return !$this->hasPayables();
+        return ! $this->hasPayables();
     }
 }

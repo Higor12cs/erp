@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ class UserController extends Controller
     public function index(): Response
     {
         $users = User::query()
+            ->with('roles')
             ->where('tenant_id', Auth::user()->tenant_id)
             ->when(request('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
@@ -36,19 +38,27 @@ class UserController extends Controller
 
     public function store(UserRequest $request): RedirectResponse
     {
-        User::create($request->validated());
+        $user = User::create($request->validated());
+
+        if ($request->has('role_id') && $request->role_id) {
+            $user->assignRole(Role::findOrFail($request->role_id));
+        }
 
         return to_route('users.index')->with('success', 'Usuário criado com sucesso!');
     }
 
-    public function edit(User $user): Response
+    public function edit(int $sequential_id): Response
     {
-        if ($user->tenant_id !== Auth::user()->tenant_id) {
-            abort(403);
-        }
+        $user = User::query()
+            ->where('tenant_id', Auth::user()->tenant_id)
+            ->where('sequential_id', $sequential_id)
+            ->firstOrFail();
+
+        $userRoleId = $user->roles->first() ? $user->roles->first()->id : null;
 
         return Inertia::render('Users/Edit', [
             'user' => $user,
+            'userRoleId' => $userRoleId,
         ]);
     }
 
@@ -58,7 +68,33 @@ class UserController extends Controller
             abort(403);
         }
 
+        // Check if this is the last admin
+        if ($user->hasRole('Administrador') && $request->has('role_id')) {
+            $newRole = Role::find($request->role_id);
+            $isRemovingAdmin = ! $newRole || $newRole->name !== 'Administrador';
+
+            if ($isRemovingAdmin) {
+                $adminCount = User::role('Administrador')
+                    ->where('tenant_id', Auth::user()->tenant_id)
+                    ->count();
+
+                if ($adminCount === 1) {
+                    return back()->withErrors([
+                        'role_id' => 'Não é possível remover o papel de Administrador deste usuário pois ele é o único administrador.',
+                    ]);
+                }
+            }
+        }
+
         $user->update($request->validated());
+
+        if ($request->has('role_id')) {
+            $user->syncRoles([]);
+
+            if ($request->role_id) {
+                $user->assignRole(Role::findOrFail($request->role_id));
+            }
+        }
 
         return to_route('users.index')->with('success', 'Usuário atualizado com sucesso!');
     }
@@ -67,6 +103,19 @@ class UserController extends Controller
     {
         if ($user->tenant_id !== Auth::user()->tenant_id) {
             abort(403);
+        }
+
+        // Check if this is the last admin
+        if ($user->hasRole('Administrador')) {
+            $adminCount = User::role('Administrador')
+                ->where('tenant_id', Auth::user()->tenant_id)
+                ->count();
+
+            if ($adminCount === 1) {
+                return back()->withErrors([
+                    'delete' => 'Não é possível excluir o único usuário administrador.',
+                ]);
+            }
         }
 
         $user->delete();

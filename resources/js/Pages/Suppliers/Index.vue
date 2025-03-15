@@ -79,7 +79,10 @@ const cancelDelete = () => {
                 />
             </div>
 
-            <Link :href="route('suppliers.create')" class="btn btn-primary mb-auto">
+            <Link
+                :href="route('suppliers.create')"
+                class="btn btn-primary mb-auto"
+            >
                 <i class="fas fa-sm fa-plus"></i>
                 &nbsp; Novo Fornecedor
             </Link>
@@ -120,15 +123,30 @@ const cancelDelete = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="supplier in suppliers.data" :key="supplier.id">
-                                <td>{{ String(supplier.sequential_id).padStart(6, '0') }}</td>
+                            <tr
+                                v-for="supplier in suppliers.data"
+                                :key="supplier.id"
+                            >
+                                <td>
+                                    {{
+                                        String(supplier.sequential_id).padStart(
+                                            6,
+                                            "0"
+                                        )
+                                    }}
+                                </td>
                                 <td>{{ supplier.first_name }}</td>
                                 <td>{{ supplier.last_name }}</td>
                                 <td>{{ supplier.legal_name }}</td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
-                                            :href="route('suppliers.edit', supplier.sequential_id)"
+                                            :href="
+                                                route(
+                                                    'suppliers.edit',
+                                                    supplier.sequential_id
+                                                )
+                                            "
                                             class="btn btn-sm btn-secondary mr-1"
                                         >
                                             Editar

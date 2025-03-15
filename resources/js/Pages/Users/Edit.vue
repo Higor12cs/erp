@@ -2,14 +2,17 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm, Link } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import Select2 from "@/Components/Select2.vue";
 
 const props = defineProps({
     user: Object,
+    userRoleId: Number,
 });
 
 const form = useForm({
     name: props.user.name,
     email: props.user.email,
+    role_id: props.userRoleId,
 });
 
 const submit = () => {
@@ -31,7 +34,6 @@ const submit = () => {
                     ]"
                 />
             </div>
-
             <Link
                 :href="route('users.index')"
                 class="btn btn-secondary mb-auto"
@@ -39,7 +41,6 @@ const submit = () => {
                 <i class="fas fa-sm fa-arrow-left"></i>&nbsp; Voltar
             </Link>
         </div>
-
         <div class="card">
             <div class="card-header">Edição de Usuário</div>
             <div class="card-body">
@@ -57,6 +58,7 @@ const submit = () => {
                             {{ form.errors.name }}
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input
@@ -69,6 +71,18 @@ const submit = () => {
                         <div v-if="form.errors.email" class="invalid-feedback">
                             {{ form.errors.email }}
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <Select2
+                            label="Papel"
+                            v-model="form.role_id"
+                            :error="form.errors.role_id"
+                            :search-url="route('api.roles.search')"
+                            value-key="id"
+                            label-key="name"
+                            placeholder="Pesquisar"
+                        />
                     </div>
 
                     <div class="d-flex justify-content-end mt-3">
