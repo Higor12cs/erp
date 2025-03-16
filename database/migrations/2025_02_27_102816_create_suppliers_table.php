@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('country')->nullable();
+            $table->boolean('active')->default(true);
             $table->foreignUuid('created_by')->constrained('users');
             $table->timestamps();
         });

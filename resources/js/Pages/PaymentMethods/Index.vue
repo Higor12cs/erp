@@ -156,7 +156,7 @@ const cancelDelete = () => {
                             </tr>
                             <tr v-if="paymentMethods.data.length === 0">
                                 <td colspan="4" class="text-center">
-                                    Nenhuma forma de pagamento encontrada.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

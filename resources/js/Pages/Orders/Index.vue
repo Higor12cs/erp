@@ -166,7 +166,7 @@ const cancelDelete = () => {
                             </tr>
                             <tr v-if="orders.data.length === 0">
                                 <td colspan="6" class="text-center">
-                                    Nenhum pedido encontrado.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

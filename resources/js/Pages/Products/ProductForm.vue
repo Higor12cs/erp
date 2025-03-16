@@ -25,6 +25,7 @@ const form = useForm({
     sku: props.product.sku || "",
     cost: props.product.cost || "",
     price: props.product.price || "",
+    active: props.product.active !== undefined ? props.product.active : true,
 });
 
 const submit = () => {
@@ -117,6 +118,15 @@ defineExpose({ form });
                     maskType="currency"
                     required
                 />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="icheck-primary">
+                    <input type="checkbox" id="active" v-model="form.active" />
+                    <label for="active">Ativo</label>
+                </div>
             </div>
         </div>
 

@@ -10,7 +10,17 @@ class Tenant extends Model
 {
     use HasUuids;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'trial_ends_at',
+        'subscription_ends_at',
+        'subscription_cancelled_at',
+    ];
+
+    protected $casts = [
+        'trial_ends_at' => 'datetime',
+        'subscription_ends_at' => 'datetime',
+    ];
 
     public function users(): HasMany
     {

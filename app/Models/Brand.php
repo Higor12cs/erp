@@ -13,7 +13,17 @@ class Brand extends Model
 {
     use BelongsToTenant, HasUuids, Sequential;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'tenant_id',
+        'sequential_id',
+        'name',
+        'active',
+        'created_by',
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
 
     public function products(): HasMany
     {

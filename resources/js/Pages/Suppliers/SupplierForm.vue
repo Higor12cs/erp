@@ -37,6 +37,7 @@ const form = useForm({
     city: props.supplier.city || "",
     state: props.supplier.state || "",
     country: props.supplier.country || "",
+    active: props.supplier.active !== undefined ? props.supplier.active : true,
 });
 
 const submit = () => {
@@ -205,6 +206,15 @@ defineExpose({ form });
                     v-model="form.country"
                     :error="form.errors.country"
                 />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="icheck-primary">
+                    <input type="checkbox" id="active" v-model="form.active" />
+                    <label for="active">Ativo</label>
+                </div>
             </div>
         </div>
 

@@ -14,7 +14,7 @@ class RoleController extends Controller
         $roles = Role::query()
             ->with('permissions')
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
+                $query->where('name', 'ilike', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -130,7 +130,7 @@ class RoleController extends Controller
 
         $roles = Role::query()
             ->where('tenant_id', auth()->user()->tenant_id)
-            ->where('name', 'like', "%{$query}%")
+            ->where('name', 'ilike', "%{$query}%")
             ->limit(5)
             ->get(['id', 'name']);
 

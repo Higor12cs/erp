@@ -18,7 +18,7 @@ const emit = defineEmits(["submit"]);
 const form = useForm({
     _method: props.brand.id ? "PUT" : "POST",
     name: props.brand.name || "",
-    description: props.brand.description || "",
+    active: props.brand.active !== undefined ? props.brand.active : true,
 });
 
 const submit = () => {
@@ -40,6 +40,15 @@ defineExpose({ form });
                     required
                     autofocus
                 />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="icheck-primary">
+                    <input type="checkbox" id="active" v-model="form.active" />
+                    <label for="active">Ativo</label>
+                </div>
             </div>
         </div>
 

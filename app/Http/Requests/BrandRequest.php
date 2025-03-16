@@ -12,10 +12,18 @@ class BrandRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'active' => $this->boolean('active'),
+        ]);
+    }
+
     public function rules(): array
     {
         return [
             'name' => 'required|string|max:255',
+            'active' => 'required|boolean',
         ];
     }
 

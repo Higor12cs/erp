@@ -101,7 +101,8 @@ const cancelDelete = () => {
                         <thead>
                             <tr>
                                 <th class="col-1">Código</th>
-                                <th class="col-10">Nome</th>
+                                <th class="col-9">Nome</th>
+                                <th class="col-1">Ativo</th>
                                 <th class="col-1">Ações</th>
                             </tr>
                         </thead>
@@ -116,6 +117,17 @@ const cancelDelete = () => {
                                     }}
                                 </td>
                                 <td>{{ brand.name }}</td>
+                                <td>
+                                    <span
+                                        v-if="brand.active"
+                                        class="badge badge-success"
+                                    >
+                                        Ativo
+                                    </span>
+                                    <span v-else class="badge badge-danger">
+                                        Inativo
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
@@ -139,8 +151,8 @@ const cancelDelete = () => {
                                 </td>
                             </tr>
                             <tr v-if="brands.data.length === 0">
-                                <td colspan="3" class="text-center">
-                                    Nenhuma marca encontrada.
+                                <td colspan="4" class="text-center">
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

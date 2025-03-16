@@ -102,7 +102,8 @@ const cancelDelete = () => {
                             <tr>
                                 <th class="col-1">Código</th>
                                 <th class="col-5">Nome</th>
-                                <th class="col-5">Seção</th>
+                                <th class="col-4">Seção</th>
+                                <th class="col-1">Ativo</th>
                                 <th class="col-1">Ações</th>
                             </tr>
                         </thead>
@@ -118,6 +119,16 @@ const cancelDelete = () => {
                                 </td>
                                 <td>{{ group.name }}</td>
                                 <td>{{ group.section.name }}</td>
+                                <td>
+                                    <span
+                                        :class="{
+                                            'badge badge-success': group.active,
+                                            'badge badge-danger': !group.active,
+                                        }"
+                                    >
+                                        {{ group.active ? "Ativo" : "Inativo" }}
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
@@ -141,8 +152,8 @@ const cancelDelete = () => {
                                 </td>
                             </tr>
                             <tr v-if="groups.data.length === 0">
-                                <td colspan="4" class="text-center">
-                                    Nenhum grupo encontrado.
+                                <td colspan="5" class="text-center">
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

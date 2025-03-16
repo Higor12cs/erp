@@ -101,7 +101,8 @@ const cancelDelete = () => {
                         <thead>
                             <tr>
                                 <th class="col-1">Código</th>
-                                <th class="col-10">Nome</th>
+                                <th class="col-9">Nome</th>
+                                <th class="col-1">Ativo</th>
                                 <th class="col-1">Ações</th>
                             </tr>
                         </thead>
@@ -119,6 +120,20 @@ const cancelDelete = () => {
                                     }}
                                 </td>
                                 <td>{{ section.name }}</td>
+                                <td>
+                                    <span
+                                        class="badge"
+                                        :class="
+                                            section.active
+                                                ? 'bg-success'
+                                                : 'bg-danger'
+                                        "
+                                    >
+                                        {{
+                                            section.active ? "Ativo" : "Inativo"
+                                        }}
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
@@ -142,8 +157,8 @@ const cancelDelete = () => {
                                 </td>
                             </tr>
                             <tr v-if="sections.data.length === 0">
-                                <td colspan="3" class="text-center">
-                                    Nenhuma seção encontrada.
+                                <td colspan="4" class="text-center">
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

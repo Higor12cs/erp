@@ -29,7 +29,7 @@ const submit = () => {
         <div class="login-box">
             <div class="card card-outline card-primary">
                 <div class="card-header text-center">
-                    <Link href="/" class="h1">
+                    <Link href="/" class="h3">
                         {{ appName }}
                     </Link>
                 </div>

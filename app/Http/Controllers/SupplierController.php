@@ -12,9 +12,9 @@ class SupplierController extends Controller
     {
         $suppliers = Supplier::query()
             ->when(request('search'), function ($query, $search) {
-                $query->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('legal_name', 'like', "%{$search}%");
+                $query->where('first_name', 'ilike', "%{$search}%")
+                    ->orWhere('last_name', 'ilike', "%{$search}%")
+                    ->orWhere('legal_name', 'ilike', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -85,7 +85,7 @@ class SupplierController extends Controller
         }
 
         $query = $request->search ?? '';
-        $suppliers = Supplier::where('first_name', 'like', "%{$query}%")
+        $suppliers = Supplier::where('first_name', 'ilike', "%{$query}%")
             ->limit(10)
             ->get();
 

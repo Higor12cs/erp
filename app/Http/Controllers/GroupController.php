@@ -13,7 +13,7 @@ class GroupController extends Controller
         $groups = Group::query()
             ->with('section')
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
+                $query->where('name', 'ilike', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -89,7 +89,7 @@ class GroupController extends Controller
         $query = $request->search ?? '';
 
         $groups = Group::with('section')
-            ->where('name', 'like', "%{$query}%")
+            ->where('name', 'ilike', "%{$query}%")
             ->limit(10)
             ->get();
 

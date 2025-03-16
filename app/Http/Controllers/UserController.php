@@ -18,8 +18,8 @@ class UserController extends Controller
             ->with('roles')
             ->where('tenant_id', Auth::user()->tenant_id)
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                $query->where('name', 'ilike', "%{$search}%")
+                    ->orWhere('email', 'ilike', "%{$search}%");
             })
             ->orderBy('name')
             ->paginate(10)

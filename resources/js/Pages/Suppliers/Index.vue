@@ -116,9 +116,10 @@ const cancelDelete = () => {
                         <thead>
                             <tr>
                                 <th class="col-1">Código</th>
-                                <th class="col-4">Nome</th>
+                                <th class="col-3">Nome</th>
                                 <th class="col-3">Sobrenome</th>
                                 <th class="col-3">Razão Social</th>
+                                <th class="col-1">Ativo</th>
                                 <th class="col-1">Ações</th>
                             </tr>
                         </thead>
@@ -138,6 +139,17 @@ const cancelDelete = () => {
                                 <td>{{ supplier.first_name }}</td>
                                 <td>{{ supplier.last_name }}</td>
                                 <td>{{ supplier.legal_name }}</td>
+                                <td>
+                                    <span
+                                        v-if="supplier.active"
+                                        class="badge badge-success"
+                                    >
+                                        Ativo
+                                    </span>
+                                    <span v-else class="badge badge-danger">
+                                        Inativo
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
@@ -161,7 +173,7 @@ const cancelDelete = () => {
                                 </td>
                             </tr>
                             <tr v-if="suppliers.data.length === 0">
-                                <td colspan="5" class="text-center">
+                                <td colspan="6" class="text-center">
                                     Nenhum fornecedor encontrado.
                                 </td>
                             </tr>

@@ -1,6 +1,8 @@
 <script setup>
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
+const appName = import.meta.env.VITE_APP_NAME || "";
+
 const form = useForm({
     tenant_name: "Acme Inc",
     name: "Usuário Teste",
@@ -21,7 +23,9 @@ const submit = () => {
         <div class="register-box">
             <div class="card card-outline card-primary">
                 <div class="card-header text-center">
-                    <Link href="/" class="h1"><b>Admin</b>LTE</Link>
+                    <Link href="/" class="h3">
+                        {{ appName }}
+                    </Link>
                 </div>
                 <div class="card-body">
                     <p class="login-box-msg">Registre uma nova conta</p>
@@ -149,6 +153,7 @@ const submit = () => {
                                     type="submit"
                                     class="btn btn-primary btn-block"
                                     :disabled="form.processing"
+                                    style="border-radius: 0"
                                 >
                                     <span
                                         v-if="form.processing"

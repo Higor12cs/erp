@@ -14,7 +14,23 @@ class Product extends Model
 {
     use BelongsToTenant, HasUuids, Sequential;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'tenant_id',
+        'sequential_id',
+        'brand_id',
+        'group_id',
+        'name',
+        'description',
+        'sku',
+        'cost',
+        'price',
+        'active',
+        'created_by',
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
 
     public function brand(): BelongsTo
     {

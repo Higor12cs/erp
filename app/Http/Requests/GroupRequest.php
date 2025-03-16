@@ -12,11 +12,19 @@ class GroupRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'active' => $this->boolean('active'),
+        ]);
+    }
+
     public function rules(): array
     {
         return [
             'section_id' => 'required|exists:sections,id',
             'name' => 'required|string|max:255',
+            'active' => 'required|boolean',
         ];
     }
 

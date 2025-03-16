@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->decimal('cost', 10, 2)->default(0);
             $table->decimal('price', 10, 2)->default(0);
+            $table->boolean('active')->default(true);
             $table->foreignUuid('created_by')->constrained('users');
             $table->timestamps();
         });

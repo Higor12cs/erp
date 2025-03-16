@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
-            $table->foreignUuid('section_id')->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
+            $table->foreignUuid('section_id')->constrained();
             $table->string('name');
+            $table->boolean('active')->default(true);
             $table->foreignUuid('created_by')->constrained('users');
             $table->timestamps();
         });

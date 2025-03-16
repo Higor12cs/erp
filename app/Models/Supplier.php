@@ -12,10 +12,34 @@ class Supplier extends Model
 {
     use BelongsToTenant, HasUuids, Sequential;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'tenant_id',
+        'sequential_id',
+        'first_name',
+        'last_name',
+        'legal_name',
+        'cpf_cnpj',
+        'rg',
+        'ie',
+        'birth_date',
+        'email',
+        'phone',
+        'whatsapp',
+        'zip_code',
+        'address',
+        'number',
+        'complement',
+        'neighborhood',
+        'city',
+        'state',
+        'country',
+        'active',
+        'created_by',
+    ];
 
     protected $casts = [
         'birth_date' => 'date',
+        'active' => 'boolean',
     ];
 
     public function createdBy(): BelongsTo

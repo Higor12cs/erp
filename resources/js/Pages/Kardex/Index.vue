@@ -229,8 +229,7 @@ const resetFilters = () => {
                             </tr>
                             <tr v-if="movements.data.length === 0">
                                 <td colspan="8" class="text-center">
-                                    Nenhuma movimentação encontrada para os
-                                    filtros selecionados.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

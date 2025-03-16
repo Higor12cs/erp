@@ -40,6 +40,7 @@ const form = useForm({
     city: props.customer.city || "",
     state: props.customer.state || "",
     country: props.customer.country || "Brasil",
+    active: props.customer.active !== undefined ? props.customer.active : true,
 });
 
 const fetchAddressFromCep = async (cep) => {
@@ -257,6 +258,15 @@ defineExpose({ form });
                     v-model="form.country"
                     :error="form.errors.country"
                 />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="icheck-primary">
+                    <input type="checkbox" id="active" v-model="form.active" />
+                    <label for="active">Ativo</label>
+                </div>
             </div>
         </div>
 

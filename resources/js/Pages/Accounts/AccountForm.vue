@@ -80,7 +80,15 @@ defineExpose({ form });
         </div>
 
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
+                <InputField
+                    id="bank_name"
+                    label="Banco"
+                    v-model="form.bank_name"
+                    :error="form.errors.bank_name"
+                />
+            </div>
+            <div class="col-4">
                 <InputField
                     id="agency"
                     label="Agência"
@@ -88,7 +96,7 @@ defineExpose({ form });
                     :error="form.errors.agency"
                 />
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <InputField
                     id="account_number"
                     label="Número da Conta"
@@ -99,7 +107,7 @@ defineExpose({ form });
         </div>
 
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
                 <div class="icheck-primary">
                     <input type="checkbox" id="active" v-model="form.active" />
                     <label for="active">Ativo</label>

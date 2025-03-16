@@ -12,7 +12,7 @@ class SectionController extends Controller
     {
         $sections = Section::query()
             ->when(request('search'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
+                $query->where('name', 'ilike', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -81,7 +81,7 @@ class SectionController extends Controller
         $query = $request->search ?? '';
 
         $sections = Section::query()
-            ->where('name', 'like', "%{$query}%")
+            ->where('name', 'ilike', "%{$query}%")
             ->limit(5)
             ->get(['id', 'name']);
 

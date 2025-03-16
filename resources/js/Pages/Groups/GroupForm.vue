@@ -20,6 +20,7 @@ const form = useForm({
     _method: props.group.id ? "PUT" : "POST",
     name: props.group.name || "",
     section_id: props.group.section_id || "",
+    active: props.group.active !== undefined ? props.group.active : true,
 });
 
 const handleSectionChange = (value) => {
@@ -47,6 +48,7 @@ defineExpose({ form });
                 />
             </div>
         </div>
+
         <div class="row">
             <div class="col-12">
                 <Select2
@@ -60,6 +62,15 @@ defineExpose({ form });
                     required
                     @change="handleSectionChange"
                 />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="icheck-primary">
+                    <input type="checkbox" id="active" v-model="form.active" />
+                    <label for="active">Ativo</label>
+                </div>
             </div>
         </div>
 

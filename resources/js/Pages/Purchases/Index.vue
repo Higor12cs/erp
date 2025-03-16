@@ -171,7 +171,7 @@ const cancelDelete = () => {
                             </tr>
                             <tr v-if="purchases.data.length === 0">
                                 <td colspan="6" class="text-center">
-                                    Nenhuma compra encontrada.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

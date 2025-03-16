@@ -180,7 +180,7 @@ const getPermissionBadges = (permissions) => {
                             </tr>
                             <tr v-if="roles.data.length === 0">
                                 <td colspan="3" class="text-center">
-                                    Nenhum papel encontrado.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

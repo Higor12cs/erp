@@ -17,6 +17,7 @@ class ProductRequest extends FormRequest
         $this->merge([
             'cost' => $this->convertToNumber($this->cost),
             'price' => $this->convertToNumber($this->price),
+            'active' => $this->boolean('active'),
         ]);
     }
 
@@ -41,6 +42,7 @@ class ProductRequest extends FormRequest
             'sku' => 'nullable|string|max:255',
             'cost' => 'required|numeric|gt:0',
             'price' => 'required|numeric|gt:0',
+            'active' => 'required|boolean',
         ];
     }
 

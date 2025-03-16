@@ -12,9 +12,9 @@ class CustomerController extends Controller
     {
         $customers = Customer::query()
             ->when(request('search'), function ($query, $search) {
-                $query->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('legal_name', 'like', "%{$search}%");
+                $query->where('first_name', 'ilike', "%{$search}%")
+                    ->orWhere('last_name', 'ilike', "%{$search}%")
+                    ->orWhere('legal_name', 'ilike', "%{$search}%");
             })
             ->latest()
             ->paginate(10)
@@ -85,7 +85,7 @@ class CustomerController extends Controller
         }
 
         $query = $request->search ?? '';
-        $customers = Customer::where('first_name', 'like', "%{$query}%")
+        $customers = Customer::where('first_name', 'ilike', "%{$query}%")
             ->limit(10)
             ->get();
 

@@ -146,7 +146,7 @@ class PurchaseController extends Controller
         }
 
         $query = $request->search ?? '';
-        $purchases = Purchase::where('sequential_id', 'like', "%{$query}%")
+        $purchases = Purchase::where('sequential_id', 'ilike', "%{$query}%")
             ->limit(10)
             ->get();
 

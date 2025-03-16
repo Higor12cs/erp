@@ -155,7 +155,7 @@ const cancelDelete = () => {
                             </tr>
                             <tr v-if="accounts.data.length === 0">
                                 <td colspan="4" class="text-center">
-                                    Nenhuma conta encontrada.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

@@ -11,6 +11,13 @@ class SupplierRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'active' => $this->boolean('active'),
+        ]);
+    }
+
     public function rules(): array
     {
         return [
@@ -32,6 +39,7 @@ class SupplierRequest extends FormRequest
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:2',
             'country' => 'nullable|string|max:100',
+            'active' => 'required|boolean',
         ];
     }
 

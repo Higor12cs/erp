@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
             $table->string('name');
+            $table->boolean('active')->default(true);
             $table->foreignUuid('created_by')->constrained('users');
             $table->timestamps();
         });

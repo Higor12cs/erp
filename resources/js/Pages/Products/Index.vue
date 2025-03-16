@@ -12,6 +12,13 @@ const props = defineProps({
     filters: Object,
 });
 
+const formatCurrency = (value) => {
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(value);
+};
+
 const searchForm = useForm({
     search: props.filters?.search || "",
 });
@@ -101,9 +108,11 @@ const cancelDelete = () => {
                         <thead>
                             <tr>
                                 <th class="col-1">Código</th>
-                                <th class="col-6">Nome</th>
-                                <th class="col-2">Seção</th>
-                                <th class="col-2">Grupo</th>
+                                <th class="col-5">Nome</th>
+                                <th class="col-1">Seção</th>
+                                <th class="col-1">Grupo</th>
+                                <th class="col-1">Valor</th>
+                                <th class="col-1">Ativo</th>
                                 <th class="col-1">Ações</th>
                             </tr>
                         </thead>
@@ -123,6 +132,19 @@ const cancelDelete = () => {
                                 <td>{{ product.name }}</td>
                                 <td>{{ product?.group?.section?.name }}</td>
                                 <td>{{ product?.group?.name }}</td>
+                                <td>{{ formatCurrency(product.price) }}</td>
+                                <td>
+                                    <span
+                                        class="badge"
+                                        :class="
+                                            product.active
+                                                ? 'bg-success'
+                                                : 'bg-danger'
+                                        "
+                                    >
+                                        {{ product.active ? "Sim" : "Não" }}
+                                    </span>
+                                </td>
                                 <td>
                                     <div class="text-nowrap">
                                         <Link
@@ -146,8 +168,8 @@ const cancelDelete = () => {
                                 </td>
                             </tr>
                             <tr v-if="products.data.length === 0">
-                                <td colspan="5" class="text-center">
-                                    Nenhum produto encontrado.
+                                <td colspan="7" class="text-center">
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>
