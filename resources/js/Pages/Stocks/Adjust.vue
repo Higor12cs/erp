@@ -15,7 +15,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route("stock.store-adjustment", props.stock.id));
+    form.post(route("stocks.store-adjustment", props.stock.id));
 };
 </script>
 
@@ -28,13 +28,13 @@ const submit = () => {
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Estoque', routeName: 'stock.index' },
+                        { label: 'Estoque', routeName: 'stocks.index' },
                         { label: 'Ajuste' },
                     ]"
                 />
             </div>
             <Link
-                :href="route('stock.index')"
+                :href="route('stocks.index')"
                 class="btn btn-secondary mb-auto"
             >
                 <i class="fas fa-sm fa-arrow-left"></i>

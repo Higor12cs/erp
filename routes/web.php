@@ -31,9 +31,9 @@ Route::redirect('/', '/home');
 
 // Rotas de autenticação
 Route::middleware('guest')->group(function () {
-    Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login');
+    Route::get('/login', fn() => Inertia::render('Auth/Login'))->name('login');
     Route::post('/login', LoginController::class)->name('login.attempt');
-    Route::get('/registrar', fn () => Inertia::render('Auth/Register'))->name('register');
+    Route::get('/registrar', fn() => Inertia::render('Auth/Register'))->name('register');
     Route::post('/registrar', RegisterController::class)->name('register.attempt');
 });
 
@@ -42,8 +42,8 @@ Route::post('/logout', LogoutController::class)->name('logout')->middleware('aut
 // Rotas protegidas por autenticação
 Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRoutePermissionMiddleware::class])->group(function () {
     // Páginas principais
-    Route::get('/home', fn () => Inertia::render('Home/Index'))->name('home.index');
-    Route::get('/dashboard', fn () => Inertia::render('Dashboard/Index'))->name('dashboard.index');
+    Route::get('/home', fn() => Inertia::render('Home/Index'))->name('home.index');
+    Route::get('/dashboard', fn() => Inertia::render('Dashboard/Index'))->name('dashboard.index');
 
     // Rotas de API
     Route::prefix('/api')->as('api.')->group(function () {
@@ -183,9 +183,9 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     Route::delete('/formas-pagamento/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('payment-methods.destroy');
 
     // Estoque
-    Route::get('/estoque', [StockController::class, 'index'])->name('stock.index');
-    Route::get('/estoque/{stock:sequential_id}/ajuste', [StockController::class, 'adjust'])->name('stock.adjust');
-    Route::post('/estoque/{stock}/ajuste', [StockController::class, 'storeAdjustment'])->name('stock.store-adjustment');
+    Route::get('/estoque', [StockController::class, 'index'])->name('stocks.index');
+    Route::get('/estoque/{stock:sequential_id}/ajuste', [StockController::class, 'adjust'])->name('stocks.adjust');
+    Route::post('/estoque/{stock}/ajuste', [StockController::class, 'storeAdjustment'])->name('stocks.store-adjustment');
 
     // Kardex
     Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');

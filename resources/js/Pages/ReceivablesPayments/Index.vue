@@ -134,20 +134,21 @@ const formatSequentialId = (id) => {
                             :initial-options="[]"
                         />
                     </div>
+
                     <div
                         class="col-md-6 d-flex justify-content-end mt-auto pb-3"
                     >
                         <button
-                            class="btn btn-primary mr-1"
-                            @click="applyFilters"
+                            class="btn btn-secondary mr-2"
+                            @click="resetFilters"
                         >
-                            <i class="fas fa-search"></i>
-                            &nbsp; Filtrar
+                            <i class="fas fa-times"></i>
+                            &nbsp; Limpar Filtros
                         </button>
 
-                        <button class="btn btn-secondary" @click="resetFilters">
-                            <i class="fas fa-times"></i>
-                            &nbsp; Limpar
+                        <button class="btn btn-primary" @click="applyFilters">
+                            <i class="fas fa-search"></i>
+                            &nbsp; Filtrar
                         </button>
                     </div>
                 </div>

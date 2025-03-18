@@ -151,10 +151,10 @@ export const sidebarItems = [
             },
             {
                 type: "link",
-                routeName: "stock.index",
+                routeName: "stocks.index",
                 iconClass: "fas fa-boxes",
                 label: "Estoque",
-                permission: "stock.index",
+                permission: "stocks.index",
             },
             {
                 type: "link",

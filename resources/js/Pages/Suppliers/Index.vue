@@ -174,7 +174,7 @@ const cancelDelete = () => {
                             </tr>
                             <tr v-if="suppliers.data.length === 0">
                                 <td colspan="6" class="text-center">
-                                    Nenhum fornecedor encontrado.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

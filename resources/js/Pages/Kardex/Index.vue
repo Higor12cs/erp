@@ -105,13 +105,13 @@ const resetFilters = () => {
                 <Breadcrumb
                     :breadcrumb="[
                         { label: 'Home', routeName: 'home.index' },
-                        { label: 'Estoque', routeName: 'stock.index' },
+                        { label: 'Estoque', routeName: 'stocks.index' },
                         { label: 'Kardex' },
                     ]"
                 />
             </div>
             <Link
-                :href="route('stock.index')"
+                :href="route('stocks.index')"
                 class="btn btn-secondary mb-auto"
             >
                 <i class="fas fa-sm fa-arrow-left"></i>
@@ -160,7 +160,8 @@ const resetFilters = () => {
                         class="btn btn-secondary mr-2"
                         @click="resetFilters"
                     >
-                        Limpar Filtros
+                        <i class="fas fa-times"></i>
+                        &nbsp; Limpar Filtros
                     </button>
                     <button
                         type="button"

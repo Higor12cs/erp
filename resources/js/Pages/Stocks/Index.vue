@@ -22,7 +22,7 @@ const search = ref(props.filters.search || "");
 
 const submit = () => {
     router.get(
-        route("stock.index"),
+        route("stocks.index"),
         { search: search.value },
         { preserveState: true }
     );
@@ -106,7 +106,7 @@ const submit = () => {
                                     <Link
                                         :href="
                                             route(
-                                                'stock.adjust',
+                                                'stocks.adjust',
                                                 stock.sequential_id
                                             )
                                         "
@@ -128,7 +128,7 @@ const submit = () => {
                             </tr>
                             <tr v-if="stocks.data.length === 0">
                                 <td colspan="6" class="text-center">
-                                    Nenhum produto em estoque encontrado.
+                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

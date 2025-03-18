@@ -224,19 +224,19 @@ const isAllSelected = computed(() => {
 
             <div>
                 <Link
-                    :href="route('receivables.create')"
-                    class="btn btn-primary mr-2"
-                >
-                    <i class="fas fa-sm fa-plus"></i>
-                    &nbsp; Novo Recebível
-                </Link>
-
-                <Link
                     :href="route('receivables.payments.index')"
-                    class="btn btn-info"
+                    class="btn btn-secondary mr-2"
                 >
                     <i class="fas fa-sm fa-list"></i>
                     &nbsp; Listar Recebidos
+                </Link>
+
+                <Link
+                    :href="route('receivables.create')"
+                    class="btn btn-primary"
+                >
+                    <i class="fas fa-sm fa-plus"></i>
+                    &nbsp; Novo Recebível
                 </Link>
             </div>
         </div>
@@ -310,16 +310,16 @@ const isAllSelected = computed(() => {
                         class="col-md-6 d-flex justify-content-end mt-auto pb-3"
                     >
                         <button
-                            class="btn btn-primary mr-2"
-                            @click="applyFilters"
+                            class="btn btn-secondary mr-2"
+                            @click="resetFilters"
                         >
-                            <i class="fas fa-search"></i>
-                            &nbsp; Filtrar
-                        </button>
-
-                        <button class="btn btn-secondary" @click="resetFilters">
                             <i class="fas fa-times"></i>
                             &nbsp; Limpar Filtros
+                        </button>
+
+                        <button class="btn btn-primary" @click="applyFilters">
+                            <i class="fas fa-search"></i>
+                            &nbsp; Filtrar
                         </button>
                     </div>
                 </div>
