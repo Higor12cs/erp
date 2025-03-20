@@ -283,7 +283,7 @@ onMounted(() => {
                                     :href="
                                         route(
                                             'orders.create-receivables',
-                                            order.id
+                                            order.sequential_id
                                         )
                                     "
                                     class="btn btn-sm btn-primary ml-2"
