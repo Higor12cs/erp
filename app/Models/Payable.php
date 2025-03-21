@@ -16,6 +16,7 @@ class Payable extends Model
         'tenant_id',
         'sequential_id',
         'purchase_id',
+        'chart_account_id',
         'payment_method_id',
         'is_manual',
         'supplier_id',
@@ -40,6 +41,11 @@ class Payable extends Model
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class);
+    }
+
+    public function chartAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartAccount::class);
     }
 
     public function paymentMethod(): BelongsTo

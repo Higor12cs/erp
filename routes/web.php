@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ChartAccountController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\KardexController;
@@ -56,6 +57,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/accounts/search', [AccountController::class, 'search'])->name('accounts.search');
         Route::get('/payment-methods/search', [PaymentMethodController::class, 'search'])->name('payment-methods.search');
         Route::get('/roles/search', [RoleController::class, 'search'])->name('roles.search');
+        Route::get('/chart-accounts/search', [ChartAccountController::class, 'search'])->name('chart-accounts.search');
     });
 
     // Rotas de pagamentos de recebíveis
@@ -181,6 +183,13 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     Route::get('/formas-pagamento/{paymentMethod:sequential_id}/editar', [PaymentMethodController::class, 'edit'])->name('payment-methods.edit');
     Route::put('/formas-pagamento/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('payment-methods.update');
     Route::delete('/formas-pagamento/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('payment-methods.destroy');
+
+    Route::get('/plano-contas', [ChartAccountController::class, 'index'])->name('chart-accounts.index');
+    Route::get('/plano-contas/criar', [ChartAccountController::class, 'create'])->name('chart-accounts.create');
+    Route::post('/plano-contas', [ChartAccountController::class, 'store'])->name('chart-accounts.store');
+    Route::get('/plano-contas/{chartAccount:sequential_id}/editar', [ChartAccountController::class, 'edit'])->name('chart-accounts.edit');
+    Route::put('/plano-contas/{chartAccount}', [ChartAccountController::class, 'update'])->name('chart-accounts.update');
+    Route::delete('/plano-contas/{chartAccount}', [ChartAccountController::class, 'destroy'])->name('chart-accounts.destroy');
 
     // Estoque
     Route::get('/estoque', [StockController::class, 'index'])->name('stocks.index');

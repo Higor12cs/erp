@@ -132,6 +132,12 @@ export const sidebarItems = [
                         label: "Métodos de Pagamento",
                         permission: "payment-methods.index",
                     },
+                    {
+                        routeName: "chart-accounts.index",
+                        iconClass: "fas fa-chart-pie",
+                        label: "Planos de Contas",
+                        permission: "chart-accounts.index",
+                    }
                 ],
             },
         ],

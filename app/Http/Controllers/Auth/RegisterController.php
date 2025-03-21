@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Tenant;
+use Database\Seeders\ChartAccountSeeder;
+use Database\Seeders\DefaultCustomerSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +43,6 @@ class RegisterController extends Controller
             ]);
 
             $user = $tenant->users()->first();
-
             app(PermissionRegistrar::class)->setPermissionsTeamId($user->tenant_id);
 
             $adminRole = Role::firstOrCreate([
@@ -57,10 +58,12 @@ class RegisterController extends Controller
             ]);
 
             $adminRole->syncPermissions(Permission::all());
-
             $user->assignRole($adminRole);
 
             Auth::login($user);
+
+            (new ChartAccountSeeder())->run($tenant);
+            (new DefaultCustomerSeeder())->run($tenant);
         });
 
         return to_route('home.index');

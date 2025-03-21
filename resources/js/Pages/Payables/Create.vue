@@ -13,6 +13,7 @@ const form = useForm({
     payables: [
         {
             supplier_id: "",
+            chart_account_id: "",
             payment_method_id: "",
             issue_date: new Date().toISOString().slice(0, 10),
             due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -34,6 +35,7 @@ const addPayable = () => {
 
     form.payables.push({
         supplier_id: form.payables[0].supplier_id,
+        chart_account_id: form.payables[0].chart_account_id,
         payment_method_id: form.payables[0].payment_method_id,
         issue_date: form.payables[0].issue_date,
         due_date: newDueDate,
@@ -72,6 +74,12 @@ const updatePaymentMethodForAll = (newMethodId) => {
     });
 };
 
+const updateChartAccountForAll = (newMethodId) => {
+    form.payables.forEach((payable) => {
+        payable.chart_account_id = newMethodId;
+    });
+};
+
 const updateIssueDateForAll = (newDate) => {
     form.payables.forEach((payable) => {
         payable.issue_date = newDate;
@@ -105,8 +113,8 @@ const updateIssueDateForAll = (newDate) => {
             <div class="card-header">Cadastro de Pagáveis</div>
             <div class="card-body">
                 <form @submit.prevent="handleSubmit">
-                    <div class="row mb-4">
-                        <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-6">
                             <Select2
                                 label="Fornecedor"
                                 v-model="form.payables[0].supplier_id"
@@ -120,7 +128,27 @@ const updateIssueDateForAll = (newDate) => {
                             />
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
+                            <Select2
+                                label="Plano de Conta"
+                                v-model="form.payables[0].chart_account_id"
+                                :error="
+                                    form.errors['payables.0.chart_account_id']
+                                "
+                                :search-url="
+                                    route('api.chart-accounts.search')
+                                "
+                                value-key="id"
+                                label-key="name"
+                                placeholder="Pesquisar"
+                                required
+                                @update:modelValue="updateChartAccountForAll"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
                             <Select2
                                 label="Método de Pagamento"
                                 v-model="form.payables[0].payment_method_id"
@@ -138,7 +166,7 @@ const updateIssueDateForAll = (newDate) => {
                             />
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <InputField
                                 id="issue_date"
                                 label="Data de Emissão"
