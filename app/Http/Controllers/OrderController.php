@@ -7,7 +7,9 @@ use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\OrderUpdateRequest;
 use App\Models\Order;
 use App\Services\OrderService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Spatie\Browsershot\Browsershot;
 
 class OrderController extends Controller
 {
@@ -126,5 +128,37 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function print(Order $order, Request $request)
+    {
+        $type = $request->query('type', 'a4');
+        if (!in_array($type, ['a4', 'thermal'])) {
+            $type = 'a4';
+        }
+
+        $order = Order::with(['customer', 'items.product', 'createdBy', 'receivables.paymentMethod'])
+            ->findOrFail($order->id);
+
+        $view = $type === 'thermal' ? 'reports.order-thermal' : 'reports.order-a4';
+        $html = view($view, compact('order'))->render();
+
+        $browsershot = Browsershot::html($html)
+            ->showBackground();
+
+        if ($type === 'thermal') {
+            $browsershot->paperSize(80, 297)
+                ->margins(1, 1, 1, 1)
+                ->deviceScaleFactor(1.5)
+                ->scale(1.0);
+        } else {
+            $browsershot->format('A4');
+        }
+
+        $pdf = $browsershot->pdf();
+
+        return response($pdf)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline');
     }
 }

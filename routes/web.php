@@ -156,6 +156,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     Route::delete('/pedidos/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::get('/pedidos/{order:sequential_id}/recebiveis/criar', [OrderController::class, 'createReceivables'])->name('orders.create-receivables');
     Route::post('/pedidos/{order}/recebiveis', [OrderController::class, 'storeReceivables'])->name('orders.store-receivables');
+    Route::get('/pedidos/imprimir/{order:sequential_id}', [OrderController::class, 'print'])->name('orders.print');
 
     // Compras routes
     Route::get('/compras', [PurchaseController::class, 'index'])->name('purchases.index');

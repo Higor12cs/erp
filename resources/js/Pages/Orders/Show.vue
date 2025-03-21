@@ -85,13 +85,51 @@ onMounted(() => {
                 />
             </div>
 
-            <Link
-                :href="route('orders.index')"
-                class="btn btn-secondary mb-auto"
-            >
-                <i class="fas fa-sm fa-arrow-left"></i>
-                &nbsp; Voltar
-            </Link>
+            <div class="d-flex">
+                <div class="dropdown mr-2">
+                    <button
+                        class="btn btn-primary dropdown-toggle"
+                        type="button"
+                        id="printDropdown"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                    >
+                        <i class="fas fa-print"></i>
+                        &nbsp; Imprimir
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="printDropdown">
+                        <a
+                            class="dropdown-item"
+                            :href="
+                                route('orders.print', order.sequential_id) +
+                                '?type=a4'
+                            "
+                            target="_blank"
+                        >
+                            Imprimir A4
+                        </a>
+                        <a
+                            class="dropdown-item"
+                            :href="
+                                route('orders.print', order.sequential_id) +
+                                '?type=thermal'
+                            "
+                            target="_blank"
+                        >
+                            Imprimir Térmica
+                        </a>
+                    </div>
+                </div>
+
+                <Link
+                    :href="route('orders.index')"
+                    class="btn btn-secondary mb-auto"
+                >
+                    <i class="fas fa-sm fa-arrow-left"></i>
+                    &nbsp; Voltar
+                </Link>
+            </div>
         </div>
 
         <div class="row">
