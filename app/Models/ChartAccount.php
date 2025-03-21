@@ -56,13 +56,14 @@ class ChartAccount extends Model
 
     public static function generateCode($parentId = null)
     {
-        if (!$parentId) {
+        if (! $parentId) {
             $lastAccount = static::whereNull('parent_id')
                 ->orderBy('code', 'desc')
                 ->first();
 
-            $baseCode = $lastAccount ? (int)$lastAccount->code + 1 : 1;
-            return (string)$baseCode;
+            $baseCode = $lastAccount ? (int) $lastAccount->code + 1 : 1;
+
+            return (string) $baseCode;
         }
 
         $parent = static::findOrFail($parentId);
@@ -70,12 +71,12 @@ class ChartAccount extends Model
             ->orderBy('code', 'desc')
             ->first();
 
-        if (!$lastChild) {
-            return $parent->code . '.1';
+        if (! $lastChild) {
+            return $parent->code.'.1';
         }
 
         $parts = explode('.', $lastChild->code);
-        $lastPart = (int)end($parts) + 1;
+        $lastPart = (int) end($parts) + 1;
         $parts[count($parts) - 1] = $lastPart;
 
         return implode('.', $parts);

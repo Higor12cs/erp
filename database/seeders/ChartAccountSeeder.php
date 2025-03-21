@@ -15,15 +15,17 @@ class ChartAccountSeeder extends Seeder
      */
     public function run(Tenant $tenant): void
     {
-        if (!$tenant) {
+        if (! $tenant) {
             $this->command->error('É necessário fornecer um tenant para criar o plano de contas.');
+
             return;
         }
 
         $user = User::where('tenant_id', $tenant->id)->first();
 
-        if (!$user) {
+        if (! $user) {
             $this->command->error('Nenhum usuário encontrado para o tenant especificado.');
+
             return;
         }
 
@@ -547,7 +549,7 @@ class ChartAccountSeeder extends Seeder
      */
     private function createAccount(array $data): ChartAccount
     {
-        $account = new ChartAccount();
+        $account = new ChartAccount;
         $account->id = Str::uuid();
 
         // Buscar sequential_id específico para este tenant

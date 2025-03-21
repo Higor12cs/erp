@@ -139,6 +139,7 @@ class ChartAccountController extends Controller
             $ids = explode(',', $request->ids);
             $accounts = ChartAccount::whereIn('id', $ids)
                 ->get(['id', 'name', 'code']);
+
             return response()->json([
                 'data' => $accounts,
             ]);
@@ -178,7 +179,7 @@ class ChartAccountController extends Controller
             $used_segments = [];
             foreach ($siblings as $sibling) {
                 $segments = explode('.', $sibling->code);
-                $currentSegment = (int)end($segments);
+                $currentSegment = (int) end($segments);
                 $used_segments[$currentSegment] = true;
             }
 
@@ -187,7 +188,7 @@ class ChartAccountController extends Controller
                 $next_segment++;
             }
 
-            $newCode = $parent->code . '.' . $next_segment;
+            $newCode = $parent->code.'.'.$next_segment;
 
             $account->code = $newCode;
             $account->level = $parent->level + 1;
@@ -200,7 +201,7 @@ class ChartAccountController extends Controller
 
             $used_codes = [];
             foreach ($rootAccounts as $rootAccount) {
-                $used_codes[(int)$rootAccount->code] = true;
+                $used_codes[(int) $rootAccount->code] = true;
             }
 
             $next_code = 1;
@@ -208,7 +209,7 @@ class ChartAccountController extends Controller
                 $next_code++;
             }
 
-            $account->code = (string)$next_code;
+            $account->code = (string) $next_code;
             $account->level = 1;
             $account->save();
         }
@@ -216,15 +217,15 @@ class ChartAccountController extends Controller
 
     private function reorderSiblingCodes($parentId)
     {
-        if (!$parentId) {
+        if (! $parentId) {
             $siblings = ChartAccount::whereNull('parent_id')
                 ->orderBy('code')
                 ->get();
 
             $index = 1;
             foreach ($siblings as $sibling) {
-                if ((int)$sibling->code !== $index) {
-                    $sibling->code = (string)$index;
+                if ((int) $sibling->code !== $index) {
+                    $sibling->code = (string) $index;
                     $sibling->save();
 
                     $this->updateChildrenCodes($sibling);
@@ -233,7 +234,9 @@ class ChartAccountController extends Controller
             }
         } else {
             $parent = ChartAccount::find($parentId);
-            if (!$parent) return;
+            if (! $parent) {
+                return;
+            }
 
             $siblings = ChartAccount::where('parent_id', $parentId)
                 ->orderBy('code')
@@ -242,10 +245,10 @@ class ChartAccountController extends Controller
             $index = 1;
             foreach ($siblings as $sibling) {
                 $segments = explode('.', $sibling->code);
-                $currentSegment = (int)end($segments);
+                $currentSegment = (int) end($segments);
 
                 if ($currentSegment !== $index) {
-                    $segments[count($segments) - 1] = (string)$index;
+                    $segments[count($segments) - 1] = (string) $index;
                     $newCode = implode('.', $segments);
 
                     $sibling->code = $newCode;
@@ -277,7 +280,7 @@ class ChartAccountController extends Controller
             $childSegments = explode('.', $child->code);
             $lastChildSegment = end($childSegments);
 
-            $newCode = $account->code . '.' . $lastChildSegment;
+            $newCode = $account->code.'.'.$lastChildSegment;
             $child->code = $newCode;
             $child->level = $account->level + 1;
             $child->save();

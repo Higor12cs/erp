@@ -62,8 +62,8 @@ class RegisterController extends Controller
 
             Auth::login($user);
 
-            (new ChartAccountSeeder())->run($tenant);
-            (new DefaultCustomerSeeder())->run($tenant);
+            (new ChartAccountSeeder)->run($tenant);
+            (new DefaultCustomerSeeder)->run($tenant);
         });
 
         return to_route('home.index');

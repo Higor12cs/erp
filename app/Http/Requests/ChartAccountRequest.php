@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ChartAccount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ChartAccount;
 
 class ChartAccountRequest extends FormRequest
 {
