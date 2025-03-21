@@ -9,6 +9,13 @@ import { sidebarItems, hasPermission } from "@/menu";
 const appName = import.meta.env.VITE_APP_NAME || "";
 const currentTime = ref("");
 const page = usePage();
+const darkMode = ref(false);
+
+const toggleDarkMode = () => {
+    darkMode.value = !darkMode.value;
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkMode", darkMode.value ? "true" : "false");
+};
 
 const checkPermission = (permission) => hasPermission(permission, page);
 
@@ -71,6 +78,19 @@ onMounted(() => {
             </ul>
 
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="#"
+                        @click.prevent="toggleDarkMode"
+                        role="button"
+                    >
+                        <i
+                            class="fas"
+                            :class="darkMode ? 'fa-sun' : 'fa-moon'"
+                        ></i>
+                    </a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         {{ $page.props.auth.user.name }}

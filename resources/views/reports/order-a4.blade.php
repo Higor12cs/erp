@@ -302,6 +302,27 @@
                             {{ $order->customer ? $order->customer->first_name . ' ' . $order->customer->last_name : 'N/A' }}
                         </div>
                     </div>
+
+                    <div class="info-item">
+                        <div class="info-label">CPF/CNPJ:</div>
+                        <div class="info-value">
+                            {{ $order->customer ? $order->customer->document : 'N/A' }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Telefone/WhatsApp:</div>
+                        <div class="info-value">
+                            {{ $order->customer ? ($order->customer->phone ? $order->customer->phone . ' | ' : '') . $order->customer->whatsapp : 'N/A' }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Endereço:</div>
+                        <div class="info-value">
+                            {{ $order->customer ? $order->customer->address . ', ' . $order->customer->number . ', ' . $order->customer->complement . ', ' . $order->customer->neighborhood . ', ' . $order->customer->city . ', ' . $order->customer->state : 'N/A' }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -334,7 +355,8 @@
             <div class="totals">
                 <div class="total-label">Subtotal:</div>
                 <div class="total-value">R$
-                    {{ number_format($order->total_price + $order->discount - $order->fees, 2, ',', '.') }}</div>
+                    {{ number_format($order->total_price + $order->discount - $order->fees, 2, ',', '.') }}
+                </div>
 
                 <div class="total-label">Descontos (-):</div>
                 <div class="total-value">R$ {{ number_format($order->discount, 2, ',', '.') }}</div>
