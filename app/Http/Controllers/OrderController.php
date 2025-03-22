@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderReceivableRequest;
 use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\OrderUpdateRequest;
+use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Seller;
+use App\Models\User;
 use App\Services\OrderService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Spatie\Browsershot\Browsershot;
 
 class OrderController extends Controller
@@ -20,20 +23,82 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with(['customer', 'receivables'])
-            ->latest()
-            ->paginate(10);
+        // Define datas padrão (últimos 7 dias) se não forem fornecidas
+        $startDate = $request->filled('start_date') ? $request->start_date : Carbon::now()->subDays(7)->format('Y-m-d');
+        $endDate = $request->filled('end_date') ? $request->end_date : Carbon::now()->format('Y-m-d');
 
-        return Inertia::render('Orders/Index', [
+        $orders = Order::query()
+            ->with(['customer', 'receivables', 'seller', 'createdBy'])
+            ->when($request->filled('sequential_id'), function ($query) use ($request) {
+                $query->where('sequential_id', $request->sequential_id);
+            })
+            ->when($request->filled('customer_id'), function ($query) use ($request) {
+                $query->where('customer_id', $request->customer_id);
+            })
+            ->when(true, function ($query) use ($startDate, $endDate) {
+                // Sempre aplica o filtro de data, usando os valores padrão se necessário
+                if ($startDate && $endDate) {
+                    $query->whereBetween('issue_date', [
+                        $startDate,
+                        $endDate,
+                    ]);
+                } elseif ($startDate) {
+                    $query->where('issue_date', '>=', $startDate);
+                } elseif ($endDate) {
+                    $query->where('issue_date', '<=', $endDate);
+                }
+            })
+            ->when($request->filled('seller_id'), function ($query) use ($request) {
+                $query->where('seller_id', $request->seller_id);
+            })
+            ->when($request->filled('created_by'), function ($query) use ($request) {
+                $query->where('created_by', $request->created_by);
+            })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $status = $request->status;
+                if ($status === 'pending') {
+                    $query->whereDoesntHave('receivables');
+                } elseif ($status === 'finalized') {
+                    $query->whereHas('receivables');
+                }
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $hasResults = true;
+
+        $selectedCustomer = $request->filled('customer_id')
+            ? Customer::find($request->customer_id)
+            : null;
+
+        $selectedSeller = $request->filled('seller_id')
+            ? Seller::find($request->seller_id)
+            : null;
+
+        $selectedCreatedBy = $request->filled('created_by')
+            ? User::find($request->created_by)
+            : null;
+
+        return inertia('Orders/Index', [
             'orders' => $orders,
+            'filters' => array_merge(
+                $request->only(['sequential_id', 'customer_id', 'seller_id', 'created_by', 'status']),
+                ['start_date' => $startDate, 'end_date' => $endDate]
+            ),
+            'hasResults' => $hasResults,
+            'selectedCustomer' => $selectedCustomer,
+            'selectedSeller' => $selectedSeller,
+            'selectedCreatedBy' => $selectedCreatedBy,
         ]);
     }
 
+    // Restante dos métodos permanece o mesmo
     public function create()
     {
-        return Inertia::render('Orders/Create', [
+        return inertia('Orders/Create', [
             'order' => null,
         ]);
     }
@@ -42,7 +107,6 @@ class OrderController extends Controller
     {
         $order = $this->orderService->createOrder($request->validated());
 
-        // return to_route('orders.index')->with('success', 'Pedido criado com sucesso.');
         return to_route('orders.create-receivables', $order->sequential_id)
             ->with('success', 'Pedido criado com sucesso.');
     }
@@ -51,7 +115,7 @@ class OrderController extends Controller
     {
         $order->load(['items.product', 'createdBy', 'receivables.paymentMethod']);
 
-        return Inertia::render('Orders/Show', [
+        return inertia('Orders/Show', [
             'order' => $order,
         ]);
     }
@@ -65,7 +129,7 @@ class OrderController extends Controller
 
         $order->load(['items.product', 'createdBy']);
 
-        return Inertia::render('Orders/Edit', [
+        return inertia('Orders/Edit', [
             'order' => $order,
         ]);
     }
@@ -102,7 +166,7 @@ class OrderController extends Controller
                 ->with('error', 'Este pedido já possui recebíveis.');
         }
 
-        return Inertia::render('Orders/CreateReceivables', [
+        return inertia('Orders/CreateReceivables', [
             'order' => $order->load(['customer']),
         ]);
     }
@@ -133,7 +197,7 @@ class OrderController extends Controller
     public function print(Order $order, Request $request)
     {
         $type = $request->query('type', 'a4');
-        if (!in_array($type, ['a4', 'thermal'])) {
+        if (! in_array($type, ['a4', 'thermal'])) {
             $type = 'a4';
         }
 

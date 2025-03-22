@@ -1,30 +1,87 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Pagination from "@/Components/Pagination.vue";
 import DeleteConfirmation from "@/Components/DeleteConfirmation.vue";
+import Select2 from "@/Components/Select2.vue";
+import InputField from "@/Components/InputField.vue";
 
 const props = defineProps({
     orders: Object,
+    filters: Object,
+    hasResults: Boolean,
+    selectedCustomer: Object,
+    selectedSeller: Object,
+    selectedCreatedBy: Object,
 });
 
-const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-    }).format(value);
+// Obter as datas para os últimos 7 dias
+const getLastSevenDays = () => {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 7);
+
+    // Formatação para YYYY-MM-DD
+    const formatDate = (date) => {
+        return date.toISOString().split("T")[0];
+    };
+
+    return {
+        start: formatDate(startDate),
+        end: formatDate(endDate),
+    };
 };
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
+// Estado para controlar se o card de filtros está colapsado
+const isFilterCardCollapsed = ref(false);
+
+// Toggle para o card de filtros
+const toggleFilterCard = () => {
+    isFilterCardCollapsed.value = !isFilterCardCollapsed.value;
 };
+
+// Inicializar datas de filtro com os últimos 7 dias ou valores definidos nos filtros
+const defaultDates = getLastSevenDays();
+
+const filterForm = useForm({
+    sequential_id: props.filters?.sequential_id || "",
+    customer_id: props.filters?.customer_id || "",
+    start_date: props.filters?.start_date || defaultDates.start,
+    end_date: props.filters?.end_date || defaultDates.end,
+    seller_id: props.filters?.seller_id || "",
+    created_by: props.filters?.created_by || "",
+    status: props.filters?.status || "",
+});
 
 const showDeleteModal = ref(false);
 const deleteId = ref(null);
 const loading = ref(false);
+
+const applyFilters = () => {
+    router.get(route("orders.index"), filterForm.data(), {
+        preserveState: true,
+        replace: true,
+    });
+};
+
+const resetFilters = () => {
+    // Resetar para os últimos 7 dias, não para vazio
+    const defaultDates = getLastSevenDays();
+    filterForm.reset();
+    filterForm.start_date = defaultDates.start;
+    filterForm.end_date = defaultDates.end;
+
+    router.get(
+        route("orders.index"),
+        { start_date: defaultDates.start, end_date: defaultDates.end },
+        {
+            preserveState: true,
+            replace: true,
+        }
+    );
+};
 
 const confirmDelete = (orderId) => {
     deleteId.value = orderId;
@@ -40,6 +97,29 @@ const cancelDelete = () => {
     showDeleteModal.value = false;
     deleteId.value = null;
 };
+
+const formatCurrency = (value) => {
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(value);
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR");
+};
+
+const formatSequentialId = (id) => {
+    return String(id).padStart(6, "0");
+};
+
+// Aplicar filtros padrão ao carregar a página se não houver filtros definidos
+onMounted(() => {
+    if (!props.hasResults) {
+        applyFilters();
+    }
+});
 </script>
 
 <template>
@@ -64,10 +144,144 @@ const cancelDelete = () => {
             </Link>
         </div>
 
+        <div class="card mb-4">
+            <div
+                class="card-header d-flex justify-content-between align-items-center"
+                style="cursor: pointer"
+                @click="toggleFilterCard"
+            >
+                <div>Filtros</div>
+                <div>
+                    <i
+                        :class="
+                            isFilterCardCollapsed
+                                ? 'fas fa-sm fa-plus'
+                                : 'fas fa-sm fa-minus'
+                        "
+                    ></i>
+                </div>
+            </div>
+            <div class="card-body" v-show="!isFilterCardCollapsed">
+                <div class="row">
+                    <div class="col-md-3">
+                        <InputField
+                            id="sequential_id"
+                            label="Código"
+                            v-model="filterForm.sequential_id"
+                            type="text"
+                            placeholder="Código do pedido"
+                        />
+                    </div>
+
+                    <div class="col-md-6">
+                        <Select2
+                            label="Cliente"
+                            v-model="filterForm.customer_id"
+                            :search-url="route('api.customers.search')"
+                            value-key="id"
+                            label-key="name"
+                            placeholder="Pesquisar Cliente"
+                            :initial-options="
+                                selectedCustomer ? [selectedCustomer] : []
+                            "
+                        />
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select
+                                v-model="filterForm.status"
+                                class="form-control"
+                            >
+                                <option value="">Todos</option>
+                                <option value="pending">Pendente</option>
+                                <option value="finalized">Finalizado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <InputField
+                            id="start_date"
+                            label="Data Inicial"
+                            v-model="filterForm.start_date"
+                            type="date"
+                        />
+                    </div>
+
+                    <div class="col-md-3">
+                        <InputField
+                            id="end_date"
+                            label="Data Final"
+                            v-model="filterForm.end_date"
+                            type="date"
+                        />
+                    </div>
+
+                    <div class="col-md-6">
+                        <Select2
+                            label="Vendedor"
+                            v-model="filterForm.seller_id"
+                            :search-url="route('api.sellers.search')"
+                            value-key="id"
+                            label-key="name"
+                            placeholder="Pesquisar Vendedor"
+                            :initial-options="
+                                selectedSeller ? [selectedSeller] : []
+                            "
+                        />
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <Select2
+                            label="Criado por"
+                            v-model="filterForm.created_by"
+                            :search-url="route('api.users.search')"
+                            value-key="id"
+                            label-key="name"
+                            placeholder="Pesquisar Usuário"
+                            :initial-options="
+                                selectedCreatedBy ? [selectedCreatedBy] : []
+                            "
+                        />
+                    </div>
+
+                    <div
+                        class="col-md-6 d-flex justify-content-end mt-auto pb-3"
+                    >
+                        <button
+                            class="btn btn-secondary mr-2"
+                            @click="resetFilters"
+                        >
+                            <i class="fas fa-times"></i>
+                            &nbsp; Limpar Filtros
+                        </button>
+
+                        <button class="btn btn-primary" @click="applyFilters">
+                            <i class="fas fa-search"></i>
+                            &nbsp; Filtrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
-            <div class="card-header">Pedidos</div>
+            <div class="card-header">Lista de Pedidos</div>
             <div class="card-body">
-                <div class="table-responsive">
+                <div
+                    v-if="orders.data.length === 0"
+                    class="alert alert-warning"
+                >
+                    Nenhum pedido encontrado com os filtros aplicados.
+                </div>
+
+                <div v-else class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -83,10 +297,7 @@ const cancelDelete = () => {
                             <tr v-for="order in orders.data" :key="order.id">
                                 <td>
                                     {{
-                                        String(order.sequential_id).padStart(
-                                            6,
-                                            "0"
-                                        )
+                                        formatSequentialId(order.sequential_id)
                                     }}
                                 </td>
                                 <td>{{ order.customer.first_name }}</td>
@@ -162,11 +373,6 @@ const cancelDelete = () => {
                                     >
                                         Excluir
                                     </button>
-                                </td>
-                            </tr>
-                            <tr v-if="orders.data.length === 0">
-                                <td colspan="6" class="text-center">
-                                    Nenhum registro encontrado.
                                 </td>
                             </tr>
                         </tbody>

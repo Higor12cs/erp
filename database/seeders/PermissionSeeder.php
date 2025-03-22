@@ -94,6 +94,16 @@ class PermissionSeeder extends Seeder
                 'name' => 'Permissões',
                 'permissions' => ['index', 'create', 'edit', 'destroy'],
             ],
+
+            'sellers' => [
+                'name' => 'Vendedores',
+                'permissions' => ['index', 'create', 'edit', 'destroy'],
+            ],
+
+            'account_plans' => [
+                'name' => 'Planos de Contas',
+                'permissions' => ['index', 'create', 'edit', 'destroy'],
+            ],
         ];
 
         $actions = [

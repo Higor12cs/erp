@@ -72,6 +72,7 @@ class OrderService
         return DB::transaction(function () use ($data, $orderData) {
             $order = Order::create([
                 'customer_id' => $data['customer_id'],
+                'seller_id' => $data['seller_id'] ?? null,
                 'issue_date' => $data['issue_date'],
                 'total_cost' => $orderData['total_cost'],
                 'discount' => ($data['discount'] ?? 0),
@@ -100,6 +101,7 @@ class OrderService
         return DB::transaction(function () use ($order, $data, $orderData) {
             $order->update([
                 'customer_id' => $data['customer_id'],
+                'seller_id' => $data['seller_id'] ?? null,
                 'issue_date' => $data['issue_date'],
                 'total_cost' => $orderData['total_cost'],
                 'discount' => ($data['discount'] ?? 0),

@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -121,5 +122,26 @@ class UserController extends Controller
         $user->delete();
 
         return to_route('users.index')->with('success', 'Usuário excluído com sucesso!');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('search', '');
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            return User::query()
+                ->where('tenant_id', Auth::user()->tenant_id)
+                ->whereIn('id', explode(',', $ids))
+                ->take(10)
+                ->get(['id', 'name']);
+        }
+
+        return User::query()
+            ->where('tenant_id', Auth::user()->tenant_id)
+            ->where('name', 'like', "%{$query}%")
+            ->orWhere('email', 'like', "%{$query}%")
+            ->take(10)
+            ->get(['id', 'name']);
     }
 }

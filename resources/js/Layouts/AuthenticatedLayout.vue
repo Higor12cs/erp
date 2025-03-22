@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick } from "vue";
+import { ref, computed } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 import NavItem from "@/Components/NavItem.vue";

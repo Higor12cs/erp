@@ -11,18 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('sellers', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->foreignUuid('tenant_id')->index()->nullable()->constrained();
             $table->unsignedBigInteger('sequential_id')->index();
-            $table->foreignUuid('customer_id')->constrained();
-            $table->foreignUuid('seller_id')->nullable()->constrained();
-            $table->timestamp('issue_date');
-            $table->decimal('total_cost', 10, 2)->default(0);
-            $table->decimal('discount', 10, 2)->default(0);
-            $table->decimal('fees', 10, 2)->default(0);
-            $table->decimal('total_price', 10, 2)->default(0);
-            $table->text('observation')->nullable();
+            $table->string('name');
+            $table->boolean('active')->default(true);
             $table->foreignUuid('created_by')->constrained('users');
             $table->timestamps();
         });
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('sellers');
     }
 };

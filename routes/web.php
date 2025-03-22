@@ -19,6 +19,7 @@ use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReceivablePaymentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\SellerController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -52,12 +53,14 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
         Route::get('/suppliers/search', [SupplierController::class, 'search'])->name('suppliers.search');
         Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
         Route::get('/brands/search', [BrandController::class, 'search'])->name('brands.search');
+        Route::get('/sellers/search', [SellerController::class, 'search'])->name('sellers.search');
         Route::get('/sections/search', [SectionController::class, 'search'])->name('sections.search');
         Route::get('/groups/search', [GroupController::class, 'search'])->name('groups.search');
         Route::get('/accounts/search', [AccountController::class, 'search'])->name('accounts.search');
         Route::get('/payment-methods/search', [PaymentMethodController::class, 'search'])->name('payment-methods.search');
         Route::get('/roles/search', [RoleController::class, 'search'])->name('roles.search');
         Route::get('/chart-accounts/search', [ChartAccountController::class, 'search'])->name('chart-accounts.search');
+        Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
     });
 
     // Rotas de pagamentos de recebíveis
@@ -200,6 +203,14 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     // Kardex
     Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
 
+    // Vendedores
+    Route::get('/vendedores', [SellerController::class, 'index'])->name('sellers.index');
+    Route::get('/vendedores/criar', [SellerController::class, 'create'])->name('sellers.create');
+    Route::post('/vendedores', [SellerController::class, 'store'])->name('sellers.store');
+    Route::get('/vendedores/{seller:sequential_id}/editar', [SellerController::class, 'edit'])->name('sellers.edit');
+    Route::put('/vendedores/{seller}', [SellerController::class, 'update'])->name('sellers.update');
+    Route::delete('/vendedores/{seller}', [SellerController::class, 'destroy'])->name('sellers.destroy');
+
     // Roles
     Route::get('/papeis', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/papeis/criar', [RoleController::class, 'create'])->name('roles.create');
@@ -207,4 +218,7 @@ Route::middleware(['auth', SetCurrentTenantPermissionMiddleware::class, CheckRou
     Route::get('/papeis/{role}/editar', [RoleController::class, 'edit'])->name('roles.edit');
     Route::put('/papeis/{role}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('/papeis/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+
+    // Reports
+    Route::get('/relatorios/pedidos', fn () => Inertia::render('Reports/Orders/Index'))->name('reports.orders.index');
 });

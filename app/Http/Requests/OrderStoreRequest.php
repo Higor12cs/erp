@@ -15,6 +15,7 @@ class OrderStoreRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|exists:customers,id',
+            'seller_id' => 'nullable|exists:sellers,id',
             'issue_date' => 'required|date',
             'discount' => 'nullable|numeric|min:0',
             'fees' => 'nullable|numeric|min:0',

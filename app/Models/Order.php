@@ -18,6 +18,7 @@ class Order extends Model
         'tenant_id',
         'sequential_id',
         'customer_id',
+        'seller_id',
         'issue_date',
         'total_cost',
         'discount',
@@ -38,6 +39,11 @@ class Order extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(Seller::class);
     }
 
     public function items(): HasMany

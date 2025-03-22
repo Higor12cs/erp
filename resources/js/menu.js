@@ -137,7 +137,7 @@ export const sidebarItems = [
                         iconClass: "fas fa-chart-pie",
                         label: "Planos de Contas",
                         permission: "chart-accounts.index",
-                    }
+                    },
                 ],
             },
         ],
@@ -198,6 +198,27 @@ export const sidebarItems = [
         ],
     },
 
+    // Relatórios
+    {
+        type: "header",
+        label: "Relatórios",
+        items: [
+            {
+                type: "collapsible",
+                iconClass: "fas fa-print",
+                label: "Relatórios",
+                subItems: [
+                    {
+                        routeName: "reports.orders.index",
+                        iconClass: "fas fa-shopping-basket",
+                        label: "Pedidos",
+                        permission: "reports.orders.index",
+                    },
+                ],
+            },
+        ],
+    },
+
     // Configurações
     {
         type: "header",
@@ -209,6 +230,13 @@ export const sidebarItems = [
                 iconClass: "fas fa-users",
                 label: "Usuários",
                 permission: "users.index",
+            },
+            {
+                type: "link",
+                routeName: "sellers.index",
+                iconClass: "fas fa-users",
+                label: "Vendedores",
+                permission: "sellers.index",
             },
             {
                 type: "link",

@@ -267,7 +267,7 @@
         </div>
 
         @if (!$order->hasReceivables())
-            <div class="watermark">RASCUNHO</div>
+            <div class="watermark">PENDENTE</div>
         @endif
 
         <div class="grid">
@@ -306,7 +306,7 @@
                     <div class="info-item">
                         <div class="info-label">CPF/CNPJ:</div>
                         <div class="info-value">
-                            {{ $order->customer ? $order->customer->document : 'N/A' }}
+                            {{ $order->customer ? $order->customer->cpf_cnpj : 'N/A' }}
                         </div>
                     </div>
 

@@ -38,6 +38,7 @@ const form = useForm({
         props.order?.issue_date?.slice(0, 10) ||
         new Date().toISOString().slice(0, 10),
     customer_id: props.order?.customer_id || "",
+    seller_id: props.order?.seller_id || "",
     discount: props.order?.discount || 0,
     fees: props.order?.fees || 0,
     observation: props.order?.observation || "",
@@ -62,6 +63,7 @@ function defaultItem() {
 }
 
 const customers = ref([]);
+const sellers = ref([]);
 const products = ref([]);
 const loading = ref(false);
 const selectedProductInfo = ref({});
@@ -152,6 +154,18 @@ const fetchInitialData = async () => {
                 customers.value = response.data.data;
             } catch (error) {
                 console.error("Error fetching customer:", error);
+            }
+        }
+
+        if (props.order.seller_id) {
+            try {
+                const response = await axios.get(route("api.sellers.search"), {
+                    params: { ids: props.order.seller_id },
+                    timeout: 15000,
+                });
+                sellers.value = response.data.data;
+            } catch (error) {
+                console.error("Error fetching seller:", error);
             }
         }
 
@@ -279,6 +293,26 @@ onMounted(() => {
                     />
                     <div class="invalid-feedback">
                         {{ form.errors.issue_date }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="seller">Vendedor</label>
+                    <Select2
+                        id="seller"
+                        v-model="form.seller_id"
+                        :options="sellers"
+                        :class="{ 'is-invalid': form.errors.seller_id }"
+                        placeholder="Pesquisar"
+                        :searchUrl="route('api.sellers.search')"
+                        required
+                    />
+                    <div class="invalid-feedback">
+                        {{ form.errors.seller_id }}
                     </div>
                 </div>
             </div>
